@@ -24,7 +24,7 @@ def analyze(df: pd.DataFrame, df_title: str, cols_to_skip: list[str] = ["country
     print("Dataframe description:")
     print(df.describe(), "\n")
 
-    print("Column Values Breakdown:")
+    print("\nColumn Values Breakdown:")
     # Create a list of columns to analyze
     cols_to_analyze = [col for col in df.columns if col not in cols_to_skip]
     # Give value counts for each column
@@ -33,6 +33,6 @@ def analyze(df: pd.DataFrame, df_title: str, cols_to_skip: list[str] = ["country
         print(df[col].value_counts(), "\n")
 
     # analyze correlation between variable columns if more than one variable to analyze
-    if len(df.cols_to_analyze > 1):
-        print("Correlation Between Columns:")
-        print(df[[cols_to_analyze]].corr(), "\n")
+    if len(cols_to_analyze) > 1:
+        print("\nCorrelation Between Columns:")
+        print(df[cols_to_analyze].corr(), "\n")
