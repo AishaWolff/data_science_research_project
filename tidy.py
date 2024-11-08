@@ -28,18 +28,11 @@ def tidy (df):
       lower_columns.append(column.lower())
    rename_dict = dict(zip(all_columns,lower_columns))
    df = df.rename(columns = rename_dict)
-   
 
-
-
-   
-
-
-    
    return df
 
 #read in file from orginal_datasets folder
-df= pd.read_csv("original_datasets/healthcare_quality_and_outcomes.csv")
-#print(df.columns)
-df = tidy(df)
-#print(df.head)
+#for testing
+#df = pd.read_csv("original_datasets/healthcare_quality_and_outcomes.csv")
+#df = tidy(df)
+
