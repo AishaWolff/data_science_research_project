@@ -18,8 +18,12 @@ Steps:
 """
 import pandas as pd
 
-def tidy (df,og_country_column = "Reference area",og_year_column="TIME_PERIOD"):
-   
+def tidy (df,og_country_column = "Reference area",og_year_column="TIME_PERIOD",drop_columns = None):
+
+   #drop unneeded columns 
+   if drop_columns is None:
+      drop_columns = ["STRUCTURE","STRUCTURE_ID","STRUCTURE_NAME","ACTION","REF_AREA","FREQ","MEASURE","UNIT_MEASURE","FINANCING_SCHEME","FINANCING_SCHEME_REV","FUNCTION","MODE_PROVISION","PROVIDER","FACTOR_PROVISION","ASSET_TYPE","PRICE_BASE","Time period","Observation value","Base period","CURRENCY","UNIT_MULT","Decimals"]
+   df = df.drop(columns = drop_columns)
    #rename unclear columns
    df = df.rename(columns = {og_year_column:"year",og_country_column:"country"})
    
@@ -47,6 +51,7 @@ def tidy (df,og_country_column = "Reference area",og_year_column="TIME_PERIOD"):
 
 #read in file from orginal_datasets folder
 #for testing
-#df = pd.read_csv("original_datasets/healthcare_quality_and_outcomes.csv")
-#df = tidy(df)
-#print(df.columns)
+df = pd.read_csv("original_datasets/unfiltered_expenditure.csv")
+df = tidy(df)
+df.to_csv("testing_datasets/testing.csv",index = False)
+print(df.columns)
