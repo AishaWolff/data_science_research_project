@@ -18,16 +18,30 @@ Steps:
 """
 import pandas as pd
 
-def tidy (df):
+def tidy (df,og_country_column = "Reference area",og_year_column="TIME_PERIOD"):
+   
+   #rename unclear columns
+   df = df.rename(columns = {og_year_column:"year",og_country_column:"country"})
+   
    #drop all rows not in desried time frame 
-   df = df[(df["TIME_PERIOD"] < 2019) & (df["TIME_PERIOD"] > 2000)]
-   #rename columns to be lowercase
+   df = df[(df["year"] < 2019) & (df["year"] > 2000)]
+   
+   #rename columns to be lowercase and replace spaces with underscores
    all_columns = list(df.columns)
    lower_columns = []
    for column in all_columns:
-      lower_columns.append(column.lower())
+      lower_columns.append(column.lower().replace(" ","_"))
    rename_dict = dict(zip(all_columns,lower_columns))
    df = df.rename(columns = rename_dict)
+   
+   #drop columns with all none values
+   df = df.dropna(axis = "columns",how = "all")
+
+   #drop duplicate columns 
+
+   #checking that function successfully changed column names
+   assert "country" in df.columns,"no country column found, orginal dataframe columns named differently than expected"
+   assert "year" in df.columns,"no year column found, orginal dataframe columns named differently than expected"
 
    return df
 
@@ -35,4 +49,4 @@ def tidy (df):
 #for testing
 #df = pd.read_csv("original_datasets/healthcare_quality_and_outcomes.csv")
 #df = tidy(df)
-
+#print(df.columns)
