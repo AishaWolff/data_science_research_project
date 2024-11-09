@@ -36,6 +36,7 @@ def drop_cols_with_proportion_na(df: pd.DataFrame, proportion: float = 0.9) -> p
             drop_cols.append(col)
     # drop columns
     df.drop(columns=drop_cols)
+    return df
 
 
 def tidy(df, og_country_column="Reference area", og_year_column="TIME_PERIOD", drop_columns=None):
@@ -61,7 +62,7 @@ def tidy(df, og_country_column="Reference area", og_year_column="TIME_PERIOD", d
     df = df.rename(columns=rename_dict)
 
     # drop columns with at least 90% NA values
-    drop_cols_with_proportion_na(df, 0.9)
+    df = drop_cols_with_proportion_na(df, 0.9)
 
     # drop duplicate columns
 
