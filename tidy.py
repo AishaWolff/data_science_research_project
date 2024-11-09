@@ -35,7 +35,7 @@ def drop_cols_with_proportion_na(df: pd.DataFrame, proportion: float = 0.9) -> p
         if proportion_na >= proportion:
             drop_cols.append(col)
     # drop columns
-    df.drop(columns=drop_cols)
+    df = df.drop(columns=drop_cols)
     return df
 
 
