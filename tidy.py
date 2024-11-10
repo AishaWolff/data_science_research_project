@@ -99,7 +99,7 @@ def tidy(
                             og_year_column, drop_columns=drop_columns)
     df.to_csv(f'informational_datasets/{df_title}', index=False)
     df = tidy_numerical(df, new_data_col_name)
-    df.to_csv(f'cleaned_datasets/{df_title}')
+    df.to_csv(f'cleaned_datasets/{df_title}', index=False)
     return df
 
 
