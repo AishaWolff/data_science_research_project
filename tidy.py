@@ -79,7 +79,7 @@ def tidy_informational(df, og_country_column="Reference area", og_year_column="T
     return df
 
 
-def tidy_numerical(df, new_data_col_name):
+def tidy_numerical(df):
     keep_columns = ["country", "year"]
     numerical_columns = df.select_dtypes(include=["int64", "float64"]).columns
     for column in numerical_columns:
@@ -87,12 +87,11 @@ def tidy_numerical(df, new_data_col_name):
             keep_columns.append(column)
     drop_columns = [col for col in df.columns if col not in keep_columns]
     df = df.drop(columns=drop_columns)
-    print(df)
     return df
 
 
 def tidy(
-        df: pd.DataFrame, df_title: str, new_data_col_name: str,
+        df: pd.DataFrame, df_title: str, new_data_cols_map: dict[str],
         og_country_column: str = "Reference area", og_year_column: str = "TIME_PERIOD", drop_columns: list[str] = None) -> pd.DataFrame:
     """
     Tidy a dataframe in 2 steps, saving along the way:
@@ -106,8 +105,8 @@ def tidy(
         - df: original dataframe
         - df_title: name of the dataframe - what the df represents (for saving in different files)
             - ex: "healthcare_expenditure_per_capita"
-        - new_data_col_name: name to rename the data column in the tidied dataset (still working on this and how to implement for several data columns)
-            - should be similar to (or same as) df_title
+        - new_data_cols_map: dict mapping old name to new for the data column(s) in the df 
+            - ex: {"OBSERVED VALUE":"healthcare_expenditure_per_capita"}
         - og_country_column: name of the column in the dataframe that contains the countries
         - og_year_name: name of the column in the dataframe that contains the years
         - drop_columns: a list of unneccessary columns that should be dropped
@@ -120,10 +119,13 @@ def tidy(
         Saves dfs to informational_datasets and cleaned_datasets
     """
     df_title = df_title.replace(" ", '_').lower()
+    new_data_cols_map = {key: value.replace(" ", "_").lower()
+                         for key, value in new_data_cols_map.items()}
+    df = df.rename(columns=new_data_cols_map)
     df = tidy_informational(df, og_country_column,
                             og_year_column, drop_columns=drop_columns)
     df.to_csv(f'informational_datasets/{df_title}', index=False)
-    df = tidy_numerical(df, new_data_col_name)
+    df = tidy_numerical(df)
     df.to_csv(f'cleaned_datasets/{df_title}', index=False)
     return df
 
@@ -133,6 +135,7 @@ def tidy(
 if __name__ == "__main__":
     read_file = "original_datasets/unfiltered_set_healthcare_capita_outcomes.csv"
     df = pd.read_csv(read_file)
-    df = tidy(df, "set_healthcare_capita_outcomes.csv", '')
+    df = tidy(df, "set_healthcare_capita_outcomes.csv", {
+              'OBS_VALUE': 'set_healtchare_capita_outcomes', 'BASE_PER': 'base_period'})
+    print(df)
     #  print(df.columns)
-    print("amount of base_per non-NA values:", df['base_per'].value_counts())
