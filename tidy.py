@@ -88,14 +88,36 @@ def tidy(
         df: pd.DataFrame, df_title: str, new_data_col_name: str,
         og_country_column: str = "Reference area", og_year_column: str = "TIME_PERIOD", drop_columns: list[str] = None) -> pd.DataFrame:
     """
-    Tidy a dataframe in 2 steps:
-        1. get it to an informational step: drop useless columns
+    Tidy a dataframe in 2 steps, saving along the way:
+        1. get it to an informational state and save in informational_datasets: 
+            - drop useless columns
+            - rename remaining columns
+        2. get it to a tidy state and save in cleaned_datasets:
+            - just containing an index, country, year, and data column(s)
+
+    Parameters:
+        - df: original dataframe
+        - df_title: name of the dataframe - what the df represents (for saving in different files)
+            - ex: "healthcare_expenditure_per_capita"
+        - new_data_col_name: name to rename the data column in the tidied dataset (still working on this and how to implement for several data columns)
+            - should be similar to (or same as) df_title
+        - og_country_column: name of the column in the dataframe that contains the countries
+        - og_year_name: name of the column in the dataframe that contains the years
+        - drop_columns: a list of unneccessary columns that should be dropped
+            - should not contain columns that would be put in the informational_dataset
+
+    Returns:
+        An updated, tidied dataframe
+
+    Side Effects:
+        Saves dfs to informational_datasets and cleaned_datasets
     """
+    df_title = df_title.replace(" ", '_').lower()
     df = tidy_informational(df, og_country_column,
                             og_year_column, drop_columns=drop_columns)
     df.to_csv(f'informational_datasets/{df_title}', index=False)
     df = tidy_numerical(df, new_data_col_name)
-    # df.to_csv(f'cleaned_datasets/{df_title}')
+    df.to_csv(f'cleaned_datasets/{df_title}')
     return df
 
 
