@@ -6,3 +6,4 @@ Here is where everyone will be writing code for their individual datasets.
 
 import pandas as pd
 from analysis import analyze
+from tidy import tidy
