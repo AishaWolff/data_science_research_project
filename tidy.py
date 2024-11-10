@@ -82,7 +82,7 @@ def tidy(df, og_country_column="Reference area", og_year_column="TIME_PERIOD", d
 # read in file from orginal_datasets folder
 # for testing
 if __name__ == "__main__":
-    df = pd.read_csv("original_datasets/unfiltered_expenditure.csv")
+    df = pd.read_csv("original_datasets/unfiltered_set_healthcare_capita_outcomes.csv")
     df = tidy(df)
     df.to_csv("testing_datasets/testing.csv", index=False)
     print(df.columns)
