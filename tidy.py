@@ -124,9 +124,9 @@ def tidy(
     df = df.rename(columns=new_data_cols_map)
     df = tidy_informational(df, og_country_column,
                             og_year_column, drop_columns=drop_columns)
-    df.to_csv(f'informational_datasets/{df_title}', index=False)
+    df.to_csv(f'informational_datasets/{df_title}.csv', index=False)
     df = tidy_numerical(df)
-    df.to_csv(f'cleaned_datasets/{df_title}', index=False)
+    df.to_csv(f'cleaned_datasets/{df_title}.csv', index=False)
     df = df.reset_index(drop=True)
     return df
 
