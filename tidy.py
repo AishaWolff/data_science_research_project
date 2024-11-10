@@ -44,7 +44,7 @@ def tidy_informational(df, og_country_column="Reference area", og_year_column="T
     # drop unneeded columns
     if drop_columns is None:
         drop_columns = ["STRUCTURE", "STRUCTURE_ID", "STRUCTURE_NAME", "ACTION", "REF_AREA", "FREQ", "MEASURE", "UNIT_MEASURE", "FINANCING_SCHEME", "FINANCING_SCHEME_REV", "FUNCTION",
-                        "MODE_PROVISION", "PROVIDER", "FACTOR_PROVISION", "ASSET_TYPE", "PRICE_BASE", "Time period", "Observation value", "Base period", "CURRENCY", "UNIT_MULT", "Decimals"]
+                        "MODE_PROVISION", "PROVIDER", "FACTOR_PROVISION", "ASSET_TYPE", "PRICE_BASE", "Time period", "Observation value", "Base period", "CURRENCY", "UNIT_MULT", "DECIMALS", "Decimals"]
     df = df.drop(columns=drop_columns)
     # rename unclear columns
     df = df.rename(columns={og_year_column: "year",
@@ -104,6 +104,5 @@ def tidy(
 if __name__ == "__main__":
     df = pd.read_csv(
         "original_datasets/unfiltered_set_healthcare_capita_outcomes.csv")
-    df = tidy(df)
-    df.to_csv("testing_datasets/testing.csv", index=False)
+    df = tidy(df, "set_healthcare_capita_outcomes.csv", '')
     print(df.columns)
