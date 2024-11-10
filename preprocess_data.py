@@ -32,7 +32,7 @@ def medical_tech_availability():
 medical_tech_availability()
 
 def healthcare_expenditure_worldbank():
-    df = pd.read_csv("health_expenditure.csv")
+    df = pd.read_csv("original_datasets/health_expenditure.csv")
     df = df.rename(columns=df.iloc[3]).iloc[4:]
     #drop columns not needed and only years from 2000 to 2019
     columns_to_keep = ['Country Name', 'Country Code'] + \
