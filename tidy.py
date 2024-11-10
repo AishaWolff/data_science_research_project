@@ -66,11 +66,11 @@ def tidy_informational(df, og_country_column="Reference area", og_year_column="T
 
     # drop columns with that have the not applicable in them
     not_app_columns = df.columns[(df == "Not applicable").all()]
-    df = df.drop(columns = not_app_columns)
+    df = df.drop(columns=not_app_columns)
 
     # drop columns with that have the not application in them
     not_application_columns = df.columns[(df == "Not application").all()]
-    df = df.drop(columns = not_application_columns)
+    df = df.drop(columns=not_application_columns)
 
     # checking that function successfully changed column names
     assert "country" in df.columns, "no country column found, orginal dataframe columns named differently than expected"
@@ -79,15 +79,27 @@ def tidy_informational(df, og_country_column="Reference area", og_year_column="T
     return df
 
 
-def tidy(df, og_country_column="Reference area", og_year_column="TIME_PERIOD", drop_columns=None):
-   df = tidy_informational(df, og_country_column, og_year_column, drop_columns=drop_columns)
-   # todo: save df to informational_datasets
-   # todo: call tidy_numerical
+def tidy_numerical(df, new_data_col_name):
+
+    return df
+
+
+def tidy(
+        df: pd.DataFrame, df_title: str, new_data_col_name: str,
+        og_country_column: str = "Reference area", og_year_column: str = "TIME_PERIOD", drop_columns: list[str] = None) -> pd.DataFrame:
+
+    df = tidy_informational(df, og_country_column,
+                            og_year_column, drop_columns=drop_columns)
+    df.to_csv(f'informational_datasets/{df_title}', index=False)
+    df = tidy_numerical(df, new_data_col_name)
+    df.to_csv(f'cleaned_datasets/{df_title}')
+
 
 # read in file from orginal_datasets folder
 # for testing
 if __name__ == "__main__":
-    df = pd.read_csv("original_datasets/unfiltered_set_healthcare_capita_outcomes.csv")
+    df = pd.read_csv(
+        "original_datasets/unfiltered_set_healthcare_capita_outcomes.csv")
     df = tidy(df)
     df.to_csv("testing_datasets/testing.csv", index=False)
     print(df.columns)
