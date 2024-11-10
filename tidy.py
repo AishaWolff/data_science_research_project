@@ -39,7 +39,7 @@ def drop_cols_with_proportion_na(df: pd.DataFrame, proportion: float = 0.9) -> p
     return df
 
 
-def tidy(df, og_country_column="Reference area", og_year_column="TIME_PERIOD", drop_columns=None):
+def tidy_informational(df, og_country_column="Reference area", og_year_column="TIME_PERIOD", drop_columns=None):
 
     # drop unneeded columns
     if drop_columns is None:
@@ -78,6 +78,11 @@ def tidy(df, og_country_column="Reference area", og_year_column="TIME_PERIOD", d
 
     return df
 
+
+def tidy(df, og_country_column="Reference area", og_year_column="TIME_PERIOD", drop_columns=None):
+   df = tidy_informational(df, og_country_column, og_year_column, drop_columns=drop_columns)
+   # todo: save df to informational_datasets
+   # todo: call tidy_numerical
 
 # read in file from orginal_datasets folder
 # for testing
