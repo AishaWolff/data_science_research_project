@@ -80,7 +80,14 @@ def tidy_informational(df, og_country_column="Reference area", og_year_column="T
 
 
 def tidy_numerical(df, new_data_col_name):
-
+    keep_columns = ["country", "year"]
+    numerical_columns = df.select_dtypes(include=["int64", "float64"]).columns
+    for column in numerical_columns:
+        if column not in keep_columns:
+            keep_columns.append(column)
+    drop_columns = [col for col in df.columns if col not in keep_columns]
+    df = df.drop(columns=drop_columns)
+    print(df)
     return df
 
 
@@ -117,14 +124,15 @@ def tidy(
                             og_year_column, drop_columns=drop_columns)
     df.to_csv(f'informational_datasets/{df_title}', index=False)
     df = tidy_numerical(df, new_data_col_name)
-    df.to_csv(f'cleaned_datasets/{df_title}')
+    df.to_csv(f'cleaned_datasets/{df_title}', index=False)
     return df
 
 
 # read in file from orginal_datasets folder
 # for testing
 if __name__ == "__main__":
-    df = pd.read_csv(
-        "original_datasets/unfiltered_set_healthcare_capita_outcomes.csv")
+    read_file = "original_datasets/unfiltered_set_healthcare_capita_outcomes.csv"
+    df = pd.read_csv(read_file)
     df = tidy(df, "set_healthcare_capita_outcomes.csv", '')
-    print(df.columns)
+    #  print(df.columns)
+    print("amount of base_per non-NA values:", df['base_per'].value_counts())
