@@ -1,4 +1,4 @@
-country,frequency_of_observation,measure,unit_of_measure,health_care_provider,asset_type,price_base,year,obs_value,base_per,unit_multiplier
+country,frequency_of_observation,measure,unit_of_measure,health_care_provider,asset_type,price_base,year,set_healtchare_capita_outcomes,base_period,unit_multiplier
 Türkiye,Annual,Gross fixed capital formation,National currency,Total,Total,Current prices,2007,4409.0,,Millions
 Türkiye,Annual,Gross fixed capital formation,National currency,Total,Total,Current prices,2006,3120.0,,Millions
 Türkiye,Annual,Gross fixed capital formation,National currency,Total,Total,Current prices,2005,2067.0,,Millions
