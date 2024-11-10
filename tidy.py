@@ -87,12 +87,16 @@ def tidy_numerical(df, new_data_col_name):
 def tidy(
         df: pd.DataFrame, df_title: str, new_data_col_name: str,
         og_country_column: str = "Reference area", og_year_column: str = "TIME_PERIOD", drop_columns: list[str] = None) -> pd.DataFrame:
-
+    """
+    Tidy a dataframe in 2 steps:
+        1. get it to an informational step: drop useless columns
+    """
     df = tidy_informational(df, og_country_column,
                             og_year_column, drop_columns=drop_columns)
     df.to_csv(f'informational_datasets/{df_title}', index=False)
     df = tidy_numerical(df, new_data_col_name)
-    df.to_csv(f'cleaned_datasets/{df_title}')
+    # df.to_csv(f'cleaned_datasets/{df_title}')
+    return df
 
 
 # read in file from orginal_datasets folder
