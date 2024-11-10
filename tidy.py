@@ -64,7 +64,13 @@ def tidy(df, og_country_column="Reference area", og_year_column="TIME_PERIOD", d
     # drop columns with at least 90% NA values
     df = drop_cols_with_proportion_na(df, 0.9)
 
-    # drop duplicate columns
+    # drop columns with that have the not applicable in them
+    not_app_columns = df.columns[(df == "Not applicable").all()]
+    df = df.drop(columns = not_app_columns)
+
+    # drop columns with that have the not application in them
+    not_application_columns = df.columns[(df == "Not application").all()]
+    df = df.drop(columns = not_application_columns)
 
     # checking that function successfully changed column names
     assert "country" in df.columns, "no country column found, orginal dataframe columns named differently than expected"
