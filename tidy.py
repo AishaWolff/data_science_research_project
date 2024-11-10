@@ -43,7 +43,7 @@ def tidy_informational(df, og_country_column="Reference area", og_year_column="T
 
     # drop unneeded columns
     if drop_columns is None:
-        drop_columns = ["STRUCTURE", "STRUCTURE_ID", "STRUCTURE_NAME", "ACTION", "REF_AREA", "FREQ", "MEASURE", "UNIT_MEASURE", "FINANCING_SCHEME", "FINANCING_SCHEME_REV", "FUNCTION",
+        drop_columns = ["STRUCTURE", "STRUCTURE_ID", "STRUCTURE_NAME", "ACTION", "FREQ", "MEASURE", "UNIT_MEASURE", "FINANCING_SCHEME", "FINANCING_SCHEME_REV", "FUNCTION",
                         "MODE_PROVISION", "PROVIDER", "FACTOR_PROVISION", "ASSET_TYPE", "PRICE_BASE", "Time period", "Observation value", "Base period", "CURRENCY", "UNIT_MULT", "DECIMALS", "Decimals"]
     df = df.drop(columns=drop_columns)
     # rename unclear columns
