@@ -30,3 +30,27 @@ def medical_tech_availability():
 
 
 medical_tech_availability()
+
+def healthcare_expenditure_worldbank():
+    df = pd.read_csv("health_expenditure.csv")
+    df = df.rename(columns=df.iloc[3]).iloc[4:]
+    #drop columns not needed and only years from 2000 to 2019
+    columns_to_keep = ['Country Name', 'Country Code'] + \
+                  [col for col in df.columns if isinstance(col, float) and col >= 2000.0 and col<=2019]
+    df_filtered = df[columns_to_keep]
+    
+    #change the orientation of the dataframe and add years as observations instead of variables
+    df_long = pd.melt(df_filtered, 
+                  id_vars=['Country Name', 'Country Code'], 
+                  var_name='Year', 
+                  value_name='Value')
+    
+    # convert 'year' column from float to integer
+    df_long['Year'] = df_long['Year'].astype(int)
+    # change column names
+    df_long.columns = ['country', 'code', 'year', 'expenditure_per_capita']
+    
+    analyze(df, df_title)
+    print("Dataframe:", df, sep="\n")
+    
+healthcare_expenditure_worldbank()
