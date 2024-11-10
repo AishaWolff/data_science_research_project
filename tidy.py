@@ -127,6 +127,7 @@ def tidy(
     df.to_csv(f'informational_datasets/{df_title}', index=False)
     df = tidy_numerical(df)
     df.to_csv(f'cleaned_datasets/{df_title}', index=False)
+    df = df.reset_index(drop=True)
     return df
 
 
