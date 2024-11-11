@@ -54,3 +54,24 @@ def healthcare_expenditure_worldbank():
     print("Dataframe:", df, sep="\n")
     
 healthcare_expenditure_worldbank()
+
+def ICU_beds():
+    read_file = "original_datasets/ICU_beds.csv"
+    df = pd.read_csv(read_file)
+    # most of these are duplicate short-version columns
+    unnecessary_cols = [
+        'STRUCTURE', 'STRUCTURE_ID', 'STRUCTURE_NAME', 'ACTION', 'MEASURE', 'UNIT_MEASURE',
+        'STATISTICAL_OPERATION', 'OWNERSHIP_TYPE', 'HEALTH_FUNCTION', 'CARE_TYPE', 'MEDICAL_TECH',
+        'HEALTH_CARE_PROVIDER', 'Observation value', 'DECIMALS', 'Decimals',
+        'OBS_STATUS', 'OBS_STATUS2', 'OBS_STATUS3', 'UNIT_MULT', 'REF_YEAR_PRICE'
+    ]
+    data_cols_rename_dict = {
+        'OBS_VALUE': 'available_adult_ICU_beds'
+    }
+    df_title = "ICU_Beds_and_Use"
+    df = tidy(df, df_title,
+              data_cols_rename_dict, drop_columns=unnecessary_cols)
+    analyze(df, df_title)
+    print("Dataframe:", df, sep="\n")
+
+ICU_beds()
