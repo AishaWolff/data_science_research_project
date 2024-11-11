@@ -54,7 +54,33 @@ def healthcare_expenditure_worldbank():
     print("Dataframe:", df, sep="\n")
     
 healthcare_expenditure_worldbank()
+
+def life_expectancy_worldbank():
+    df = pd.read_csv("original_datasets/life_expectancy.csv")
+    df = df.rename(columns=df.iloc[3]).iloc[4:]
+    #drop columns not needed and only years from 2000 to 2019
+    columns_to_keep = ['Country Name', 'Country Code'] + \
+                   [col for col in df.columns if isinstance(col, float) and col >= 2000.0 and col<=2019]
+    df_filtered = df[columns_to_keep]
+    
+    #change the orientation of the dataframe and add years as observations instead of variables
+    df_long = pd.melt(df_filtered, 
+                  id_vars=['Country Name', 'Country Code'], 
+                  var_name='Year', 
+                  value_name='Value')
+    
+    # convert 'year' column from float to integer
+    df_long['Year'] = df_long['Year'].astype(int)
+    # change column names
+    df_long.columns = ['country', 'code', 'year', 'life_expectancy']
+    
+    analyze(df, df_title)
+    print("Dataframe:", df, sep="\n")
+
+life_expectancy_worldbank()
 """
+    
+
 def ICU_beds():
     read_file = "original_datasets/ICU_beds.csv"
     df = pd.read_csv(read_file)
