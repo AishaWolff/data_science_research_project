@@ -8,7 +8,7 @@ import pandas as pd
 from analysis import analyze
 from tidy import tidy
 
-
+"""
 def medical_tech_availability():
     read_file = "original_datasets/medical_tech_availability.csv"
     df = pd.read_csv(read_file)
@@ -50,11 +50,11 @@ def healthcare_expenditure_worldbank():
     # change column names
     df_long.columns = ['country', 'code', 'year', 'expenditure_per_capita']
     
-    analyze(df, df_title)
+   # analyze(df, df_title)
     print("Dataframe:", df, sep="\n")
     
 healthcare_expenditure_worldbank()
-
+"""
 def ICU_beds():
     read_file = "original_datasets/ICU_beds.csv"
     df = pd.read_csv(read_file)
