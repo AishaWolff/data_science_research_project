@@ -8,7 +8,22 @@ import pandas as pd
 from analysis import analyze
 from tidy import tidy
 
-"""
+
+# ==================================================================================
+# CALLING FUNCTIONS - comment out functions inside run() that you don't want to run
+# ==================================================================================
+
+def run():
+    medical_tech_availability()
+    healthcare_expenditure_worldbank()
+    life_expectancy_worldbank()
+    ICU_beds()
+    health_expenditure_as_percent_of_gdb()
+
+# =============================================
+# FUNCTION DEFINITIONS - no need to comment out
+# =============================================
+
 def medical_tech_availability():
     read_file = "original_datasets/medical_tech_availability.csv"
     df = pd.read_csv(read_file)
@@ -28,8 +43,6 @@ def medical_tech_availability():
     analyze(df, df_title)
     print("Dataframe:", df, sep="\n")
 
-
-medical_tech_availability()
 
 def healthcare_expenditure_worldbank():
     df = pd.read_csv("original_datasets/health_expenditure.csv")
@@ -52,8 +65,7 @@ def healthcare_expenditure_worldbank():
     
    # analyze(df, df_title)
     print("Dataframe:", df, sep="\n")
-    
-healthcare_expenditure_worldbank()
+
 
 def life_expectancy_worldbank():
     df = pd.read_csv("original_datasets/life_expectancy.csv")
@@ -73,12 +85,9 @@ def life_expectancy_worldbank():
     df_long['Year'] = df_long['Year'].astype(int)
     # change column names
     df_long.columns = ['country', 'code', 'year', 'life_expectancy']
-    
+    df_title = 'life_expectancy'
     analyze(df, df_title)
     print("Dataframe:", df, sep="\n")
-
-life_expectancy_worldbank()
-"""
     
 
 def ICU_beds():
@@ -100,4 +109,34 @@ def ICU_beds():
     analyze(df, df_title)
     print("Dataframe:", df, sep="\n")
 
-ICU_beds()
+
+def health_expenditure_as_percent_of_gdb():
+    read_file = "original_datasets/health_expenditure_as_percent_gdp.csv"
+    # cols 40 and 41 are NA for the first large chunk --> pandas must be told their type to not mix up types while reading in df in chunks to save memory
+    df = pd.read_csv(read_file, dtype={40:object, 41:object})
+    # most of these are duplicate short-version columns
+    unnecessary_cols = [
+        'STRUCTURE', 'STRUCTURE_ID', 'STRUCTURE_NAME', 'ACTION', 'MEASURE', 'UNIT_MEASURE', 'FREQ',
+        'FINANCING_SCHEME', 'PRICE_BASE', 'CURRENCY', 'BASE_PER', 'FUNCTION', 'MODE_PROVISION',
+        'FACTOR_PROVISION', 'ASSET_TYPE', 'Time period', 'Observation value', 'DECIMALS',
+        'Decimals', 'OBS_STATUS', 'OBS_STATUS2', 'OBS_STATUS3', 'Unit multiplier', 'MODE_PROVISION'
+    ]
+    data_cols_rename_dict = {
+        'OBS_VALUE': 'health_expenditure_as_percent_gdp'
+    }
+    df_title = "health_expenditure_as_percent_gdp"
+    country_col = "Reference area"
+    
+    # drop unnecessary countries to limit size of df
+
+
+    print("\n\ncolumns:\n", df.columns, "\n\n\n")
+    df = tidy(df, df_title, data_cols_rename_dict, og_country_column=country_col,
+              og_year_column="TIME_PERIOD", drop_columns=unnecessary_cols)
+    analyze(df, df_title)
+    print("Dataframe:", df, sep="\n")
+
+
+# RUNNING MAIN PROGRAM
+if __name__ == "__main__":
+    run()    
