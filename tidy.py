@@ -1,5 +1,5 @@
 """
-Tidying:
+Tidying: import the tidy function from this file. Do not put dataset code in here.
 
 Steps:
  - drop any years that aren't in the range 2000 to 2019
@@ -39,7 +39,10 @@ def drop_cols_with_proportion_na(df: pd.DataFrame, proportion: float = 0.9) -> p
     return df
 
 
-def tidy_informational(df, og_country_column="Reference area", og_year_column="TIME_PERIOD", drop_columns=None):
+def tidy_informational(df: pd.DataFrame, og_country_column: str = "Reference area", 
+                       og_country_code_column: str = "REF_AREA", 
+                       og_year_column: str = "TIME_PERIOD",
+                       drop_columns:list[str]=None) -> pd.DataFrame:
 
     # drop unneeded columns
     if drop_columns is None:
@@ -47,11 +50,15 @@ def tidy_informational(df, og_country_column="Reference area", og_year_column="T
                         "MODE_PROVISION", "PROVIDER", "FACTOR_PROVISION", "ASSET_TYPE", "PRICE_BASE", "Time period", "Observation value", "Base period", "CURRENCY", "UNIT_MULT", "DECIMALS", "Decimals"]
     df = df.drop(columns=drop_columns)
     # rename unclear columns
-    df = df.rename(columns={og_year_column: "year",
-                   og_country_column: "country"})
+    rename_dict = {og_year_column: "year",
+                   og_country_column: "country",
+                   og_country_code_column: "code"}
+    df = df.rename(columns=rename_dict)
 
     # drop all rows not in desried time frame
-    df = df[(df["year"] < 2019) & (df["year"] > 2000)]
+    max_year = 2019
+    min_year = 2000
+    df = df[(df["year"] <= max_year) & (df["year"] >= min_year)]
 
     # rename columns to be lowercase and replace spaces with underscores
     all_columns = list(df.columns)
@@ -64,11 +71,11 @@ def tidy_informational(df, og_country_column="Reference area", og_year_column="T
     # drop columns with at least 90% NA values
     df = drop_cols_with_proportion_na(df, 0.9)
 
-    # drop columns with that have the not applicable in them
+    # drop columns that have the not applicable in them
     not_app_columns = df.columns[(df == "Not applicable").all()]
     df = df.drop(columns=not_app_columns)
 
-    # drop columns with that have the not application in them
+    # drop columns that have the not application in them
     not_application_columns = df.columns[(df == "Not application").all()]
     df = df.drop(columns=not_application_columns)
 
@@ -80,7 +87,7 @@ def tidy_informational(df, og_country_column="Reference area", og_year_column="T
 
 
 def tidy_numerical(df):
-    keep_columns = ["country", "year"]
+    keep_columns = ["country", "year", "code"]
     numerical_columns = df.select_dtypes(include=["int64", "float64"]).columns
     for column in numerical_columns:
         if column not in keep_columns:
@@ -89,10 +96,13 @@ def tidy_numerical(df):
     df = df.drop(columns=drop_columns)
     return df
 
+def sort_by_country_and_year(df:pd.DataFrame) -> pd.DataFrame:
+    return df.sort_values(['code', 'year'], ascending=[True, True])
 
 def tidy(
         df: pd.DataFrame, df_title: str, new_data_cols_map: dict[str],
-        og_country_column: str = "Reference area", og_year_column: str = "TIME_PERIOD", drop_columns: list[str] = None) -> pd.DataFrame:
+        og_country_column: str = "Reference area", og_year_column: str = "TIME_PERIOD",
+        drop_columns: list[str] = None, og_country_code_column:str ="REF_AREA",) -> pd.DataFrame:
     """
     Tidy a dataframe in 2 steps, saving along the way:
         1. get it to an informational state and save in informational_datasets: 
@@ -121,22 +131,16 @@ def tidy(
     df_title = df_title.replace(" ", '_').lower()
     new_data_cols_map = {key: value.replace(" ", "_").lower()
                          for key, value in new_data_cols_map.items()}
+    # rename important columns
     df = df.rename(columns=new_data_cols_map)
-    df = tidy_informational(df, og_country_column,
-                            og_year_column, drop_columns=drop_columns)
+    df = tidy_informational(df,
+                            og_country_column=og_country_column, 
+                            og_year_column=og_year_column,
+                            og_country_code_column=og_country_code_column, 
+                            drop_columns=drop_columns)
     df.to_csv(f'informational_datasets/{df_title}.csv', index=False)
     df = tidy_numerical(df)
+    df = sort_by_country_and_year(df)
     df.to_csv(f'cleaned_datasets/{df_title}.csv', index=False)
     df = df.reset_index(drop=True)
     return df
-
-
-# read in file from orginal_datasets folder
-# for testing
-if __name__ == "__main__":
-    read_file = "original_datasets/unfiltered_set_healthcare_capita_outcomes.csv"
-    df = pd.read_csv(read_file)
-    df = tidy(df, "set_healthcare_capita_outcomes.csv", {
-              'OBS_VALUE': 'set_healtchare_capita_outcomes', 'BASE_PER': 'base_period'})
-    print(df)
-    #  print(df.columns)
