@@ -8,7 +8,7 @@ def _print_title(title):
     print("\n", "="*num_chars, title, "="*num_chars, "", sep="\n")
 
 
-def analyze(df: pd.DataFrame, df_title: str, cols_to_skip: list[str] = ["country", "year"]):
+def analyze(df: pd.DataFrame, df_title: str, cols_to_skip: list[str] = ["country", "code", "year"]):
     """
     Parameters:
         df - cleaned, tidy dataframe to analyze (columns should be variables, not individual years)
