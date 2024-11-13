@@ -111,9 +111,9 @@ def ICU_beds():
 
 
 def health_expenditure_as_percent_of_gdb():
-    read_file = "original_datasets/health_expenditure_as_percent_gdp.csv"
-    # cols 40 and 41 are NA for the first large chunk --> pandas must be told their type to not mix up types while reading in df in chunks to save memory
-    df = pd.read_csv(read_file, dtype={40:object, 41:object})
+    read_file = "original_datasets/filtered_health_expenditure_as_percent_gdp.csv"
+    # cols 38 - 41 are NA for the first large chunk --> pandas must be told their type to not mix up types while reading in df in chunks to save memory
+    df = pd.read_csv(read_file, dtype={i: object for i in range(38,42)})
     # most of these are duplicate short-version columns
     unnecessary_cols = [
         'STRUCTURE', 'STRUCTURE_ID', 'STRUCTURE_NAME', 'ACTION', 'MEASURE', 'UNIT_MEASURE', 'FREQ',
@@ -124,13 +124,10 @@ def health_expenditure_as_percent_of_gdb():
     data_cols_rename_dict = {
         'OBS_VALUE': 'health_expenditure_as_percent_gdp'
     }
-    df_title = "health_expenditure_as_percent_gdp"
+    df_title = "filtered_health_expenditure_as_percent_gdp"
     country_col = "Reference area"
     
-    # drop unnecessary countries to limit size of df
-
-
-    print("\n\ncolumns:\n", df.columns, "\n\n\n")
+    # tidy and analyze dataframe
     df = tidy(df, df_title, data_cols_rename_dict, og_country_column=country_col,
               og_year_column="TIME_PERIOD", drop_columns=unnecessary_cols)
     analyze(df, df_title)
@@ -139,4 +136,5 @@ def health_expenditure_as_percent_of_gdb():
 
 # RUNNING MAIN PROGRAM
 if __name__ == "__main__":
+    # make sure to comment out the functions that you don't want to run inside the run() function
     run()    
