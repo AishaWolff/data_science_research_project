@@ -46,7 +46,7 @@ def medical_tech_availability():
 
 
 def healthcare_expenditure_worldbank():
-    df = pd.read_csv("original_datasets/health_expenditure_worldbank.csv")
+    df = pd.read_csv("original_datasets/healthcare_expenditure_worldbank.csv")
     df = df.rename(columns=df.iloc[3]).iloc[4:]
     #drop columns not needed and only years from 2000 to 2019
     columns_to_keep = ['Country Name', 'Country Code'] + \
@@ -67,7 +67,7 @@ def healthcare_expenditure_worldbank():
     df_long = df_long.sort_values(['code', 'year'], ascending=[True, True])
     df_long = df_long.reset_index(drop=True)
     # save df
-    df_long.to_csv("cleaned_datasets/health_expenditure_worldbank.csv", index=False)
+    df_long.to_csv("cleaned_datasets/healthcare_expenditure_worldbank.csv", index=False)
 
 
 def life_expectancy_worldbank():
