@@ -32,6 +32,8 @@ def drop_cols_with_proportion_na(df: pd.DataFrame, proportion: float = 0.9) -> p
     # collect all columns that have >= proportion NA values
     for col in df.columns:
         proportion_na = df[col].isna().mean()
+        if not isinstance(proportion_na, float):
+            raise ValueError(f"after renaming columns, col '{col}' appears more than once in the dataframe. Please add one of them to the drop_columns when calling tidy().")
         if proportion_na >= proportion:
             drop_cols.append(col)
     # drop columns
@@ -46,8 +48,11 @@ def tidy_informational(df: pd.DataFrame, og_country_column: str = "Reference are
 
     # drop unneeded columns
     if drop_columns is None:
-        drop_columns = ["STRUCTURE", "STRUCTURE_ID", "STRUCTURE_NAME", "ACTION", "FREQ", "MEASURE", "UNIT_MEASURE", "FINANCING_SCHEME", "FINANCING_SCHEME_REV", "FUNCTION",
-                        "MODE_PROVISION", "PROVIDER", "FACTOR_PROVISION", "ASSET_TYPE", "PRICE_BASE", "Time period", "Observation value", "Base period", "CURRENCY", "UNIT_MULT", "DECIMALS", "Decimals"]
+        drop_columns = ["STRUCTURE", "STRUCTURE_ID", "STRUCTURE_NAME", "ACTION", "FREQ", "MEASURE",
+                        "UNIT_MEASURE", "FINANCING_SCHEME", "FINANCING_SCHEME_REV", "FUNCTION",
+                        "MODE_PROVISION", "PROVIDER", "FACTOR_PROVISION", "ASSET_TYPE",
+                        "PRICE_BASE", "Time period", "Observation value", "Base period",
+                        "CURRENCY", "UNIT_MULT", "DECIMALS", "Decimals"]
     df = df.drop(columns=drop_columns)
     # rename unclear columns
     rename_dict = {og_year_column: "year",
