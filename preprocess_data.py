@@ -21,6 +21,7 @@ def run():
     health_expenditure_as_percent_of_gdb()
     set_healthcare_capita_outcomes()
     avoidable_mortality()
+    hospital_stay_length()
 
 # =============================================
 # FUNCTION DEFINITIONS - no need to comment out
@@ -168,6 +169,25 @@ def avoidable_mortality():
                         "OBS_STATUS3"]
     new_data_cols_rename_dict = {
         "OBS_VALUE": "avoidable_deaths"
+    }
+    df = tidy(df, df_title=df_title, new_data_cols_map=new_data_cols_rename_dict,
+              drop_columns=unnecessary_cols)
+    analyze(df, df_title)
+    print(df)
+
+
+def hospital_stay_length():
+    df = pd.read_csv("original_datasets/hospital_stay_length.csv")
+    df_title = "hospital_stay_length"
+    unnecessary_cols = ["STRUCTURE", "STRUCTURE_ID", "STRUCTURE_NAME", "ACTION", "MEASURE",
+                        "UNIT_MEASURE", "Time period", "Observation value", "UNIT_MULT",
+                        "DECIMALS", "Decimals", "AGE", "DISEASE", "DIAGNOSTIC_TYPE", "PROVIDER",
+                        "CANCER_SITE", "Observation value", "OBS_STATUS2", "SEX", "FUNCTION", 
+                        "MODE_PROVISION", "CARE_TYPE", "HEALTH_FACILITY", "WAITING_TIME",
+                        "CONSULTATION_TYPE", "OBS_STATUS", "OBS_STATUS2", "OBS_STATUS3", 
+                        "MEDICAL_PROCEDURE", "OCCUPATION"]
+    new_data_cols_rename_dict = {
+        "OBS_VALUE": "hospital_stay_length"
     }
     df = tidy(df, df_title=df_title, new_data_cols_map=new_data_cols_rename_dict,
               drop_columns=unnecessary_cols)
