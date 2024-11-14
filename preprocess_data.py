@@ -20,6 +20,7 @@ def run():
     ICU_beds()
     health_expenditure_as_percent_of_gdb()
     set_healthcare_capita_outcomes()
+    avoidable_mortality()
 
 # =============================================
 # FUNCTION DEFINITIONS - no need to comment out
@@ -154,6 +155,24 @@ def set_healthcare_capita_outcomes():
     analyze(df, df_title)
     print(df)
 
+
+def avoidable_mortality():
+    read_file = "original_datasets/avoidable_mortality.csv"
+    df = pd.read_csv(read_file)
+    df_title = "avoidable_mortality"
+    unnecessary_cols = ["STRUCTURE", "STRUCTURE_ID", "STRUCTURE_NAME", "ACTION", "FREQ", "MEASURE",
+                        "UNIT_MEASURE", "Time period", "Observation value", "UNIT_MULT",
+                        "DECIMALS", "Decimals", "AGE", "SOCIO_ECON_STATUS", "DEATH_CAUSE",
+                        "CALC_METHODOLOGY", "GESTATION_THRESHOLD", "HEALTH_STATUS", "DISEASE",
+                        "CANCER_SITE", "Observation value", "OBS_STATUS2", "SEX",
+                        "OBS_STATUS3"]
+    new_data_cols_rename_dict = {
+        "OBS_VALUE": "avoidable_deaths"
+    }
+    df = tidy(df, df_title=df_title, new_data_cols_map=new_data_cols_rename_dict,
+              drop_columns=unnecessary_cols)
+    analyze(df, df_title)
+    print(df)
 
 # RUNNING MAIN PROGRAM
 if __name__ == "__main__":
