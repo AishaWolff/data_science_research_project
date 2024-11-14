@@ -14,14 +14,14 @@ from tidy import tidy
 # ==================================================================================
 
 def run():
-    # medical_tech_availability()
-    # healthcare_expenditure_worldbank()
-    # life_expectancy_worldbank()
-    # ICU_beds()
-    # health_expenditure_as_percent_of_gdb()
+    medical_tech_availability()
+    healthcare_expenditure_worldbank()
+    life_expectancy_worldbank()
+    ICU_beds()
+    health_expenditure_as_percent_of_gdb()
     set_healthcare_capita_outcomes()
-    # avoidable_mortality()
-    # hospital_stay_length()
+    avoidable_mortality()
+    hospital_stay_length()
 
 # =============================================
 # FUNCTION DEFINITIONS - no need to comment out
@@ -157,7 +157,7 @@ def set_healthcare_capita_outcomes():
     # drop all rows where base_period isn't NA, then drop base period column
     # this is fine to do because base_period rows have corresponding duplicates without base_period
     df = df[df['base_period'].isna()].reset_index(drop=True).drop(columns=['base_period'])
-    df.to_csv('cleaned_datasets/unfiltered_set_healthcare_capita_outcomes.csv')
+    df.to_csv('cleaned_datasets/unfiltered_set_healthcare_capita_outcomes.csv', index=False)
     analyze(df, df_title)
     print(df)
 
