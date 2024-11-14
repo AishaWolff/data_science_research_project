@@ -19,6 +19,7 @@ def run():
     life_expectancy_worldbank()
     ICU_beds()
     health_expenditure_as_percent_of_gdb()
+    set_healthcare_capita_outcomes()
 
 # =============================================
 # FUNCTION DEFINITIONS - no need to comment out
@@ -45,7 +46,7 @@ def medical_tech_availability():
 
 
 def healthcare_expenditure_worldbank():
-    df = pd.read_csv("original_datasets/health_expenditure.csv")
+    df = pd.read_csv("original_datasets/health_expenditure_worldbank.csv")
     df = df.rename(columns=df.iloc[3]).iloc[4:]
     #drop columns not needed and only years from 2000 to 2019
     columns_to_keep = ['Country Name', 'Country Code'] + \
@@ -62,9 +63,11 @@ def healthcare_expenditure_worldbank():
     df_long['Year'] = df_long['Year'].astype(int)
     # change column names
     df_long.columns = ['country', 'code', 'year', 'expenditure_per_capita']
-    
-   # analyze(df, df_title)
-    print("Dataframe:", df, sep="\n")
+    # sort df
+    df_long = df_long.sort_values(['code', 'year'], ascending=[True, True])
+    df_long = df_long.reset_index(drop=True)
+    # save df
+    df_long.to_csv("cleaned_datasets/health_expenditure_worldbank.csv", index=False)
 
 
 def life_expectancy_worldbank():
@@ -76,15 +79,20 @@ def life_expectancy_worldbank():
     df_filtered = df[columns_to_keep]
     
     #change the orientation of the dataframe and add years as observations instead of variables
-    df_long = pd.melt(df_filtered, 
-                  id_vars=['Country Name', 'Country Code'], 
-                  var_name='Year', 
+    df_long = pd.melt(df_filtered,
+                  id_vars=['Country Name', 'Country Code'],
+                  var_name='Year',
                   value_name='Value')
     
     # convert 'year' column from float to integer
     df_long['Year'] = df_long['Year'].astype(int)
     # change column names
     df_long.columns = ['country', 'code', 'year', 'life_expectancy']
+    # sort dataframe
+    df_long = df_long.sort_values(['code', 'year'], ascending=[True, True])
+    df_long = df_long.reset_index(drop=True)
+    df = df_long
+    df.to_csv('cleaned_datasets/life_expectancy.csv', index=False)
     df_title = 'life_expectancy'
     analyze(df, df_title)
     print("Dataframe:", df, sep="\n")
@@ -134,7 +142,20 @@ def health_expenditure_as_percent_of_gdb():
     print("Dataframe:", df, sep="\n")
 
 
+def set_healthcare_capita_outcomes():
+    read_file = "original_datasets/unfiltered_set_healthcare_capita_outcomes.csv"
+    # cols 34,35 are NA for the first large chunk --> pandas must be told their type to not mix up types while reading in df in chunks to save memory
+    df = pd.read_csv(read_file, dtype={34:object, 35:object})
+    data_cols_rename_dict = {'OBS_VALUE': 'set_healtchare_capita_outcomes',
+                              'BASE_PER': 'base_period'}
+    df_title = "unfiltered_set_healthcare_capita_outcomes"
+    # all nonspecified tidy parameters are the same as the defualts
+    df = tidy(df, df_title=df_title, new_data_cols_map=data_cols_rename_dict)
+    analyze(df, df_title)
+    print(df)
+
+
 # RUNNING MAIN PROGRAM
 if __name__ == "__main__":
     # make sure to comment out the functions that you don't want to run inside the run() function
-    run()    
+    run()
