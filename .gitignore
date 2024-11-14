@@ -1,5 +1,6 @@
 .DS_Store
 testing_datasets/
+trim_large_files.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
