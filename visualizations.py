@@ -3,6 +3,24 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
+# ==================================================================================
+# CALLING FUNCTIONS - comment out functions inside run() that you don't want to run
+# ==================================================================================
+
+def run():
+    med_tech_availability_corr_with_expenditure()
+    health_expenditure_p_capita_vs_health_expenditure_as_perc_gdp()
+    death_by_country_over_time()
+    hospital_stay_length_by_med_tech_avalibility_over_time()
+    analyze_weird_expenditure_correlations()
+
+
+# =============================================
+# FUNCTION DEFINITIONS - no need to comment out
+# =============================================
+
+
 def med_tech_availability_corr_with_expenditure():
     df = pd.read_csv('cleaned_datasets/inner_merged.csv')
     # get average over all years by country
@@ -56,10 +74,6 @@ def hospital_stay_length_by_med_tech_avalibility_over_time():
     plt.show()
 
 
-
+# RUNNING MAIN PROGRAM
 if __name__ == "__main__":
-    # med_tech_availability_corr_with_expenditure()
-    # health_expenditure_p_capita_vs_health_expenditure_as_perc_gdp()
-    # death_by_country_over_time()
-    # hospital_stay_length_by_med_tech_avalibility_over_time()
-    analyze_weird_expenditure_correlations()
+    run()
