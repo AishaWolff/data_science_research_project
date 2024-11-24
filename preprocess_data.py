@@ -18,7 +18,7 @@ def run():
     healthcare_expenditure_worldbank()
     life_expectancy_worldbank()
     ICU_beds()
-    health_expenditure_as_percent_of_gdb()
+    health_expenditure_as_percent_of_gdp()
     set_healthcare_capita_outcomes()
     avoidable_mortality()
     hospital_stay_length()
@@ -120,7 +120,7 @@ def ICU_beds():
     print("Dataframe:", df, sep="\n")
 
 
-def health_expenditure_as_percent_of_gdb():
+def health_expenditure_as_percent_of_gdp():
     read_file = "original_datasets/filtered_health_expenditure_as_percent_gdp.csv"
     # cols 38 - 41 are NA for the first large chunk --> pandas must be told their type to not mix up types while reading in df in chunks to save memory
     df = pd.read_csv(read_file, dtype={i: object for i in range(38,42)})
