@@ -15,6 +15,16 @@ def med_tech_availability_corr_with_expenditure():
     sns.barplot(data=correlation_data, y='code', x='correlation', palette='viridis')
     plt.show()
 
+def health_expenditure_p_capita_vs_health_expenditure_as_perc_gdp():
+    df = pd.read_csv('cleaned_datasets/inner_merged.csv')
+    correlation_data = df.groupby('code').apply(
+        lambda x: x['health_expenditure_as_percent_gdp'].corr(x['expenditure_per_capita'])
+    ).reset_index(name='correlation')
+
+    plt.figure(figsize=(10, 6))
+    plt.title("Correlation between Expenditure as percent of gdb and Expenditure per Capita by Country")
+    sns.barplot(data=correlation_data, y='code', x='correlation', palette='viridis')
+    plt.show()
 
 #avoidable deaths by country per year
 def death_by_country_over_time():
@@ -35,5 +45,6 @@ def hospital_stay_length_by_med_tech_avalibility_over_time():
 
 if __name__ == "__main__":
     med_tech_availability_corr_with_expenditure()
+    health_expenditure_p_capita_vs_health_expenditure_as_perc_gdp()
     death_by_country_over_time()
     hospital_stay_length_by_med_tech_avalibility_over_time()
