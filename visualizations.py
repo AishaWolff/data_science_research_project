@@ -74,6 +74,48 @@ def hospital_stay_length_by_med_tech_avalibility_over_time():
     plt.show()
 
 
+# expenditure per capita by country (mean over the years)
+def expenditure_per_capita_by_country():
+    df = pd.read_csv("cleaned_datasets/inner_merged.csv")
+    sns.barplot(data = df, x = 'code', y = 'expenditure_per_capita');
+    plt.xticks(rotation=75)
+    plt.tight_layout()
+    plt.show()
+    
+# correlation heat map for all variables
+def heat_map_all_var():
+    df = pd.read_csv("cleaned_datasets/inner_merged.csv")
+    plt.figure(figsize=(10, 8))
+    correlation_matrix = df[['hospital_stay_length', 'med_tech_availability_p_mil_ppl',
+                                    'expenditure_per_capita', 'life_expectancy',
+                                    'avoidable_deaths', 'health_expenditure_as_percent_gdp']].corr()
+
+    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f")
+    plt.title('Correlation Heatmap', fontsize=16)
+    plt.show()
+    
+# key variables correlation plots
+def key_variables_plot():
+    df = pd.read_csv("cleaned_datasets/inner_merged.csv")
+    sns.pairplot(df, vars=['expenditure_per_capita', 'life_expectancy', 
+                                    'avoidable_deaths', 'health_expenditure_as_percent_gdp'],
+                hue='code', palette='tab10', diag_kind='kde', height=2.5)
+    plt.suptitle('Pair Plot for Key Variables', y=1.02, fontsize=16)
+    plt.show()
+    
+# correlation between life expectancy and health expenditure by capita
+def per_capita_life_exp():
+    df = pd.read_csv("cleaned_datasets/inner_merged.csv")
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(data=df, x='expenditure_per_capita', y='life_expectancy', hue='code', palette='tab10')
+    sns.regplot(data=df, x='expenditure_per_capita', y='life_expectancy', scatter=False, color='black')
+    plt.title('Healthcare Expenditure vs. Life Expectancy', fontsize=16)
+    plt.xlabel('Expenditure Per Capita', fontsize=14)
+    plt.ylabel('Life Expectancy', fontsize=14)
+    plt.legend(title='Country', bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.show()
+    
+
 # RUNNING MAIN PROGRAM
 if __name__ == "__main__":
     run()
