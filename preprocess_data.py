@@ -16,14 +16,15 @@ from tidy import tidy
 # ==================================================================================
 
 def run():
-    #medical_tech_availability()
-   #healthcare_expenditure_worldbank()
-    #life_expectancy_worldbank()
-    #ICU_beds()
-    #health_expenditure_as_percent_of_gdp()
-    #set_healthcare_capita_outcomes()
-    #avoidable_mortality()
-    #hospital_stay_length()
+    # #medical_tech_availability()
+   ## healthcare_expenditure_worldbank()
+    # #life_expectancy_worldbank()
+    # #ICU_beds()
+    # #health_expenditure_as_percent_of_gdp()
+    # #set_healthcare_capita_outcomes()
+    # #avoidable_mortality()
+    # #hospital_stay_length()
+    gdp_worldbank()
     #population()
 
 # =============================================
@@ -201,6 +202,31 @@ def hospital_stay_length():
               drop_columns=unnecessary_cols)
     analyze(df, df_title)
     print(df)
+
+
+def gdp_worldbank():
+    """
+    gdp_by_country csv file retrieved from https://databank.worldbank.org/reports.aspx?source=2&series=NY.GDP.MKTP.CD&country#, setting the year to 2000-2019
+    """
+    merged_df = pd.read_csv('cleaned_datasets/inner_merged.csv')
+    df = pd.read_csv('original_datasets/gdp_by_country.csv')
+    print(df, "\n\n\n")
+    code_col = 'Country Code'
+    # drop down to only have countries and columns that are in the final merged df
+    df = df[df[code_col].isin(merged_df['code'].unique())]
+    df = df.reset_index(drop=True)
+    drop_cols = ['Series Name','Series Code']
+    df = df.drop(columns=drop_cols)
+    # get the year_col named like '2000' instead of '2000 [YR2000]'
+    year_columns = [col for col in df.columns if 'YR' in col]
+    year_rename_dict = {year_col: year_col[:4] for year_col in year_columns}
+    # rename cols in dict
+    rename_dict = {'Country Name': 'country', code_col:'code'} + year_rename_dict
+    df = df.rename(columns=rename_dict)
+    df = pd.melt(df, id_vars=['country', 'code'], value_vars=year_columns, value_name='gdp_in_usd')
+    print(df)
+    # df_title = 'gdp_by_country'
+
 
 
 def population():
