@@ -68,8 +68,13 @@ def death_by_country_over_time():
 #hospital stay length by med tech avalibity
 def hospital_stay_length_by_med_tech_avalibility_over_time():
     df = pd.read_csv("cleaned_datasets/inner_merged.csv")
-    fig = sns.clustermap(hue = "code",y = "hospital_stay_length", x = "med_tech_availability_p_mil_ppl", palette = "viridis", data =df)
+    correlation_data = df.groupby('code').apply(
+        lambda x: x['hospital_stay_length'].corr(x['med_tech_availability_p_mil_ppl'])
+    ).reset_index(name='correlation')
+    print(correlation_data)
+    fig = sns.scatterplot(y = "code", x = "correlation", palette = "viridis", data =df)
     plt.xticks(range(0,7000,500))
+    plt.title("Correlation between hostpial stay length and med tech avalability")
     sns.move_legend(fig, "upper left", bbox_to_anchor=(1, 1))
     plt.show()
 
