@@ -14,14 +14,15 @@ from tidy import tidy
 # ==================================================================================
 
 def run():
-    medical_tech_availability()
-    healthcare_expenditure_worldbank()
-    life_expectancy_worldbank()
-    ICU_beds()
-    health_expenditure_as_percent_of_gdp()
-    set_healthcare_capita_outcomes()
-    avoidable_mortality()
-    hospital_stay_length()
+    # medical_tech_availability()
+    # healthcare_expenditure_worldbank()
+    # life_expectancy_worldbank()
+    # ICU_beds()
+    # health_expenditure_as_percent_of_gdp()
+    # set_healthcare_capita_outcomes()
+    # avoidable_mortality()
+    # hospital_stay_length()
+    drop_bad_countries_from_merged()
 
 # =============================================
 # FUNCTION DEFINITIONS - no need to comment out
@@ -198,6 +199,21 @@ def hospital_stay_length():
               drop_columns=unnecessary_cols)
     analyze(df, df_title)
     print(df)
+
+def drop_bad_countries_from_merged():
+    """ Does not need to be run anymore - just used once
+    """
+    merged_df = pd.read_csv('cleaned_datasets/inner_merged.csv')
+    bad_codes = []
+    min_years_threshold = 10
+    for code, group in merged_df.groupby('code'):
+        if len(group) < min_years_threshold:
+            bad_codes.append(code)
+    # bad_countries = 
+    print(bad_codes)
+    merged_df = merged_df[~merged_df['code'].isin(bad_codes)]
+    merged_df = merged_df.reset_index(drop=True)
+    merged_df.to_csv('cleaned_datasets/inner_merged.csv', index=False)
 
 # RUNNING MAIN PROGRAM
 if __name__ == "__main__":
