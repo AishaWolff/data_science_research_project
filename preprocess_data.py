@@ -5,8 +5,8 @@ Here is where everyone will be writing code for their individual datasets.
 """
 
 import pandas as pd
-import country_converter as coco
-cc = coco.CountryConverter()
+#import country_converter as coco
+#cc = coco.CountryConverter()
 from analysis import analyze
 from tidy import tidy
 
@@ -24,7 +24,7 @@ def run():
     #set_healthcare_capita_outcomes()
     #avoidable_mortality()
     #hospital_stay_length()
-    population()
+    #population()
 
 # =============================================
 # FUNCTION DEFINITIONS - no need to comment out
@@ -210,12 +210,14 @@ def population():
     main_df = pd.read_csv("cleaned_datasets/main_df.csv")
     some_countries = df["Name"].unique()
     some_countries = pd.Series(some_countries)
-    iso3_codes = cc.pandas_convert(series=some_countries, to='ISO3')
-    print(iso3_codes)
-    print('this is the length')
-    print(len(iso3_codes == "not found"))
-    #good_countries = main_df['code'].unique()
-    #df = df[df['code'].isin(good_countries)]
+    oecd_since_1995 = cc.data[(cc.data.OECD >= 1995) & cc.data.name_short.isin(some_countries)].name_short
+    print(oecd_since_1995)
+    #iso3_codes = cc.pandas_convert(series=some_countries, to='ISO3')
+    #print(iso3_codes)
+    #print('this is the length')
+    #print(len(iso3_codes == "not found"))
+    good_countries = main_df['code'].unique()
+    df = df[df['code'].isin(good_countries)]
     drop_cols = ["Name"]
     #df = df.drop(columns = drop_cols)
     print(df)
