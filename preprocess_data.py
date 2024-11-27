@@ -5,8 +5,6 @@ Here is where everyone will be writing code for their individual datasets.
 """
 
 import pandas as pd
-#import country_converter as coco
-#cc = coco.CountryConverter()
 from analysis import analyze
 from tidy import tidy
 
@@ -24,7 +22,8 @@ def run():
     set_healthcare_capita_outcomes()
     avoidable_mortality()
     hospital_stay_length()
-    # gdp_worldbank()
+    oecd_population()
+    gdp_worldbank()
     # population()
 
 # =============================================
@@ -246,7 +245,16 @@ def population():
     df = df[df['code'].isin(good_countries)]
     drop_cols = ["Name"]
     #df = df.drop(columns = drop_cols)
+
+def oecd_population():
+    df = pd.read_csv("original_datasets/oecd_population_data.csv")
+    rename_cols = {"Code":"code","Population - Sex: all - Age: all - Variant: estimates":"population","Entity":"country","Year":"year"}
+    df = df.rename(columns= rename_cols)
     print(df)
+    unique_countires =len(df["code"].unique())
+    print(unique_countires)
+    df.to_csv("cleaned_datasets/population.csv",index = False)
+
 
 
 # RUNNING MAIN PROGRAM
