@@ -17,6 +17,7 @@ def run():
     gdp()
     #population()
     population_neg_expenditure_corr()
+    gdp()
 
 # =============================================
 # FUNCTION DEFINITIONS - no need to comment out
