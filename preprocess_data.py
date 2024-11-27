@@ -5,8 +5,6 @@ Here is where everyone will be writing code for their individual datasets.
 """
 
 import pandas as pd
-#import country_converter as coco
-#cc = coco.CountryConverter()
 from analysis import analyze
 from tidy import tidy
 
@@ -17,14 +15,14 @@ from tidy import tidy
 
 def run():
     #medical_tech_availability()
-   #healthcare_expenditure_worldbank()
+    #healthcare_expenditure_worldbank()
     #life_expectancy_worldbank()
     #ICU_beds()
     #health_expenditure_as_percent_of_gdp()
     #set_healthcare_capita_outcomes()
     #avoidable_mortality()
-    #hospital_stay_length()
-    #population()
+    # hospital_stay_length()
+    oecd_population()
 
 # =============================================
 # FUNCTION DEFINITIONS - no need to comment out
@@ -203,24 +201,16 @@ def hospital_stay_length():
     print(df)
 
 
-def population():
-    df = pd.read_csv("original_datasets/population.csv")
-    rename_dict = {"Year":"year","Population":"population","Annual Growth Rate":"annual_growth_rate","GENC":"code"}
-    df = df.rename(columns = rename_dict)
-    main_df = pd.read_csv("cleaned_datasets/main_df.csv")
-    some_countries = df["Name"].unique()
-    some_countries = pd.Series(some_countries)
-    oecd_since_1995 = cc.data[(cc.data.OECD >= 1995) & cc.data.name_short.isin(some_countries)].name_short
-    print(oecd_since_1995)
-    #iso3_codes = cc.pandas_convert(series=some_countries, to='ISO3')
-    #print(iso3_codes)
-    #print('this is the length')
-    #print(len(iso3_codes == "not found"))
-    good_countries = main_df['code'].unique()
-    df = df[df['code'].isin(good_countries)]
-    drop_cols = ["Name"]
-    #df = df.drop(columns = drop_cols)
+
+def oecd_population():
+    df = pd.read_csv("original_datasets/oecd_population_data.csv")
+    rename_cols = {"Code":"code","Population - Sex: all - Age: all - Variant: estimates":"population","Entity":"country","Year":"year"}
+    df = df.rename(columns= rename_cols)
     print(df)
+    unique_countires =len(df["code"].unique())
+    print(unique_countires)
+    df.to_csv("cleaned_datasets/population.csv",index = False)
+
 
 
 # RUNNING MAIN PROGRAM
