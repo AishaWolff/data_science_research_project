@@ -15,7 +15,6 @@ def run():
     # hospital_stay_length_by_med_tech_avalibility_over_time()
     analyze_neg_expenditure_correlations()
     gdp()
-    population_weird()
     #population()
     population_neg_expenditure_corr()
 
@@ -23,8 +22,18 @@ def run():
 # FUNCTION DEFINITIONS - no need to comment out
 # =============================================
 
-NEG_EXPENDITURE_CORR_CODES = []
-
+_NEG_EXPENDITURE_CORR_CODES = None
+def get_neg_expenditure_corr_codes(correlation_data=None):
+    if correlation_data is None:
+        df = pd.read_csv('cleaned_datasets/main_df.csv')
+        correlation_data = df.groupby('code').apply(
+            lambda x: x['health_expenditure_as_percent_gdp'].corr(x['expenditure_per_capita'])
+            ).reset_index(name='correlation')
+    global _NEG_EXPENDITURE_CORR_CODES
+    outlier_countries = correlation_data[correlation_data['correlation'] < 0]['code'].to_list()
+    _NEG_EXPENDITURE_CORR_CODES = outlier_countries
+    return _NEG_EXPENDITURE_CORR_CODES
+    
 def med_tech_availability_corr_with_expenditure():
     df = pd.read_csv('cleaned_datasets/main_df.csv')
     # get average over all years by country
@@ -53,15 +62,15 @@ def analyze_neg_expenditure_correlations():
     correlation_data = df.groupby('code').apply(
         lambda x: x['health_expenditure_as_percent_gdp'].corr(x['expenditure_per_capita'])
     ).reset_index(name='correlation')
-    weird_countries = correlation_data[correlation_data['correlation'] < 0]['code'].to_list()
-    global NEG_EXPENDITURE_CORR_CODES
-    NEG_EXPENDITURE_CORR_CODES =  weird_countries
-    df_subset = df[df['code'].isin(weird_countries)]
-    print(weird_countries)
+    outlier_countries = get_neg_expenditure_corr_codes(correlation_data)
+    df_outliers = df[df['code'].isin(outlier_countries)]
+    
     plt.rc('figure', figsize=(15, 8))
     fig, (ax1, ax2) = plt.subplots(ncols=2, sharey=False)
-    sns.lineplot(data=df_subset, x='year', y='health_expenditure_as_percent_gdp', hue='code',palette='viridis', ax=ax1)
-    sns.lineplot(data=df_subset, x='year', y='expenditure_per_capita', hue='code', palette='viridis', ax=ax2)
+    sns.lineplot(data=df_outliers, x='year', y='health_expenditure_as_percent_gdp', hue='code',palette='viridis', ax=ax1)
+    ax1.set_title('Health Expenditure as Percentage of GDP Over Time')
+    sns.lineplot(data=df_outliers, x='year', y='expenditure_per_capita', hue='code', palette='viridis', ax=ax2)
+    ax2.set_title('Health Expenditure per Capita Over Time')
     plt.show()
 
 def gdp():
@@ -148,9 +157,10 @@ def population():
 
 def population_neg_expenditure_corr():
     df = pd.read_csv("cleaned_datasets/population.csv")
-    df_weird_countries = df[df['code'].isin(NEG_EXPENDITURE_CORR_CODES)]
-    sns.lineplot(hue = "country", x ="year",y = "population",data = df_weird_countries, palette = "viridis")
-    plt.title("Population for Weird Countries from 2000 - 2019")
+    outlier_countries = get_neg_expenditure_corr_codes()
+    df_outlier_countries = df[df['code'].isin(outlier_countries)]
+    sns.lineplot(hue = "country", x ="year",y = "population",data = df_outlier_countries, palette = "viridis")
+    plt.title("Population for Outlier Countries from 2000 - 2019")
     plt.legend(title='Country', bbox_to_anchor=(1, 1), loc='upper left')
     plt.show()
 # RUNNING MAIN PROGRAM
