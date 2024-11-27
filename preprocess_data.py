@@ -199,21 +199,6 @@ def hospital_stay_length():
     analyze(df, df_title)
     print(df)
 
-def drop_bad_countries_from_merged():
-    """ Does not need to be run anymore - just used once
-    """
-    merged_df = pd.read_csv('cleaned_datasets/inner_merged.csv')
-    bad_codes = []
-    min_years_threshold = 10
-    for code, group in merged_df.groupby('code'):
-        if len(group) < min_years_threshold:
-            bad_codes.append(code)
-    # bad_countries = 
-    print(bad_codes)
-    merged_df = merged_df[~merged_df['code'].isin(bad_codes)]
-    merged_df = merged_df.reset_index(drop=True)
-    merged_df.to_csv('cleaned_datasets/inner_merged.csv', index=False)
-
 # RUNNING MAIN PROGRAM
 if __name__ == "__main__":
     # make sure to comment out the functions that you don't want to run inside the run() function
