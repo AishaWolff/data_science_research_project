@@ -24,7 +24,7 @@ def run():
 
 
 def med_tech_availability_corr_with_expenditure():
-    df = pd.read_csv('cleaned_datasets/inner_merged.csv')
+    df = pd.read_csv('cleaned_datasets/main_df.csv')
     # get average over all years by country
     correlation_data = df.groupby('code').apply(
         lambda x: x['med_tech_availability_p_mil_ppl'].corr(x['expenditure_per_capita'])
@@ -36,7 +36,7 @@ def med_tech_availability_corr_with_expenditure():
     plt.show()
 
 def health_expenditure_p_capita_vs_health_expenditure_as_perc_gdp():
-    df = pd.read_csv('cleaned_datasets/inner_merged.csv')
+    df = pd.read_csv('cleaned_datasets/main_df.csv')
     correlation_data = df.groupby('code').apply(
         lambda x: x['health_expenditure_as_percent_gdp'].corr(x['expenditure_per_capita'])
     ).reset_index(name='correlation')
@@ -47,7 +47,7 @@ def health_expenditure_p_capita_vs_health_expenditure_as_perc_gdp():
     plt.show()
 
 def analyze_weird_expenditure_correlations():
-    df = pd.read_csv('cleaned_datasets/inner_merged.csv')
+    df = pd.read_csv('cleaned_datasets/main_df.csv')
     correlation_data = df.groupby('code').apply(
         lambda x: x['health_expenditure_as_percent_gdp'].corr(x['expenditure_per_capita'])
     ).reset_index(name='correlation')
@@ -62,14 +62,14 @@ def analyze_weird_expenditure_correlations():
 
 #avoidable deaths by country per year
 def death_by_country_over_time():
-    df = pd.read_csv("cleaned_datasets/inner_merged.csv")
+    df = pd.read_csv("cleaned_datasets/main_df.csv")
     fig = sns.lineplot(hue = "code",y = "avoidable_deaths",x = "year", palette = "viridis", data = df)
     sns.move_legend(fig, "upper left", bbox_to_anchor=(1, 1))
     plt.show()
 
 #hospital stay length by med tech avalibity
 def hospital_stay_length_by_med_tech_avalibility_over_time():
-    df = pd.read_csv("cleaned_datasets/inner_merged.csv")
+    df = pd.read_csv("cleaned_datasets/main_df.csv")
     correlation_data = df.groupby('code').apply(
         lambda x: x['hospital_stay_length'].corr(x['med_tech_availability_p_mil_ppl'])
     ).reset_index(name='correlation')
@@ -83,7 +83,7 @@ def hospital_stay_length_by_med_tech_avalibility_over_time():
 
 # expenditure per capita by country (mean over the years)
 def expenditure_per_capita_by_country():
-    df = pd.read_csv("cleaned_datasets/inner_merged.csv")
+    df = pd.read_csv("cleaned_datasets/main_df.csv")
     sns.barplot(data = df, x = 'code', y = 'expenditure_per_capita');
     plt.xticks(rotation=75)
     plt.tight_layout()
@@ -91,7 +91,7 @@ def expenditure_per_capita_by_country():
     
 # correlation heat map for all variables
 def heat_map_all_var():
-    df = pd.read_csv("cleaned_datasets/inner_merged.csv")
+    df = pd.read_csv("cleaned_datasets/main_df.csv")
     plt.figure(figsize=(10, 8))
     correlation_matrix = df[['hospital_stay_length', 'med_tech_availability_p_mil_ppl',
                                     'expenditure_per_capita', 'life_expectancy',
@@ -103,7 +103,7 @@ def heat_map_all_var():
     
 # key variables correlation plots
 def key_variables_plot():
-    df = pd.read_csv("cleaned_datasets/inner_merged.csv")
+    df = pd.read_csv("cleaned_datasets/main_df.csv")
     sns.pairplot(df, vars=['expenditure_per_capita', 'life_expectancy', 
                                     'avoidable_deaths', 'health_expenditure_as_percent_gdp'],
                 hue='code', palette='tab10', diag_kind='kde', height=2.5)
@@ -112,7 +112,7 @@ def key_variables_plot():
     
 # correlation between life expectancy and health expenditure by capita
 def per_capita_life_exp():
-    df = pd.read_csv("cleaned_datasets/inner_merged.csv")
+    df = pd.read_csv("cleaned_datasets/main_df.csv")
     plt.figure(figsize=(10, 6))
     sns.scatterplot(data=df, x='expenditure_per_capita', y='life_expectancy', hue='code', palette='tab10')
     sns.regplot(data=df, x='expenditure_per_capita', y='life_expectancy', scatter=False, color='black')
