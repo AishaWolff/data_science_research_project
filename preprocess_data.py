@@ -205,15 +205,19 @@ def hospital_stay_length():
 
 def population():
     df = pd.read_csv("original_datasets/population.csv")
-    drop_cols = ["Name"]
-    df = df.drop(columns = drop_cols)
     rename_dict = {"Year":"year","Population":"population","Annual Growth Rate":"annual_growth_rate","GENC":"code"}
     df = df.rename(columns = rename_dict)
     main_df = pd.read_csv("cleaned_datasets/main_df.csv")
-    some_countries = pd.Series(df["code"].unique())
+    some_countries = df["Name"].unique()
+    some_countries = pd.Series(some_countries)
     iso3_codes = cc.pandas_convert(series=some_countries, to='ISO3')
-    good_countries = main_df['code'].unique()
-    df = df[df['code'].isin(good_countries)]
+    print(iso3_codes)
+    print('this is the length')
+    print(len(iso3_codes == "not found"))
+    #good_countries = main_df['code'].unique()
+    #df = df[df['code'].isin(good_countries)]
+    drop_cols = ["Name"]
+    #df = df.drop(columns = drop_cols)
     print(df)
 
 
