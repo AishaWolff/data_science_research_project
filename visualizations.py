@@ -9,12 +9,12 @@ import matplotlib.pyplot as plt
 # ==================================================================================
 
 def run():
-    med_tech_availability_corr_with_expenditure()
+    # med_tech_availability_corr_with_expenditure()
     health_expenditure_p_capita_vs_health_expenditure_as_perc_gdp()
-    death_by_country_over_time()
-    hospital_stay_length_by_med_tech_avalibility_over_time()
+    # death_by_country_over_time()
+    # hospital_stay_length_by_med_tech_avalibility_over_time()
     analyze_weird_expenditure_correlations()
-
+    gdp()
 
 # =============================================
 # FUNCTION DEFINITIONS - no need to comment out
@@ -45,17 +45,30 @@ def health_expenditure_p_capita_vs_health_expenditure_as_perc_gdp():
     plt.show()
 
 def analyze_weird_expenditure_correlations():
-    df = pd.read_csv('cleaned_datasets/inner_merged.csv')
+    df = pd.read_csv('cleaned_datasets/main_df.csv')
     correlation_data = df.groupby('code').apply(
         lambda x: x['health_expenditure_as_percent_gdp'].corr(x['expenditure_per_capita'])
     ).reset_index(name='correlation')
     weird_countries = correlation_data[correlation_data['correlation'] < 0]['code'].to_list()
     df_subset = df[df['code'].isin(weird_countries)]
-    
+    print(weird_countries)
     plt.rc('figure', figsize=(15, 8))
     fig, (ax1, ax2) = plt.subplots(ncols=2, sharey=False)
     sns.lineplot(data=df_subset, x='year', y='health_expenditure_as_percent_gdp', hue='code',palette='viridis', ax=ax1)
     sns.lineplot(data=df_subset, x='year', y='expenditure_per_capita', hue='code', palette='viridis', ax=ax2)
+    plt.show()
+
+def gdp():
+    df = pd.read_csv('cleaned_datasets/country_gdps.csv')
+    print()
+    df_weird_countries = df[df['code'].isin(['HUN', 'ISL', 'LUX'])]
+    # look at gdp for all countries
+    max_gdp = df['gdp_in_usd'].max()
+    country_w_highest_gdp = df[df['gdp_in_usd'] == max_gdp]['code'].iloc[0]
+    print("Country with highest GDP:", country_w_highest_gdp)
+    df_except_highest = df[df['code'] != country_w_highest_gdp]
+    sns.lineplot(x='year', y='gdp_in_usd', hue='country', data=df_weird_countries, palette='viridis')
+    plt.title = ""
     plt.show()
 
 #avoidable deaths by country per year
