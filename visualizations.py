@@ -15,6 +15,7 @@ def run():
     # hospital_stay_length_by_med_tech_avalibility_over_time()
     analyze_weird_expenditure_correlations()
     gdp()
+    population_weird()
 
 # =============================================
 # FUNCTION DEFINITIONS - no need to comment out
@@ -133,7 +134,20 @@ def per_capita_life_exp():
     plt.legend(title='Country', bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.show()
     
+def population():
+    df = pd.read_csv("cleaned_datasets/population.csv")
+    sns.lineplot(hue = "country", x ="year",y = "population",data = df, palette = "viridis")
+    plt.title("Population by country from 2000 - 2019")
+    plt.legend(title='Country', bbox_to_anchor=(1, 1), loc='upper left')
+    plt.show()
 
+def population_weird():
+    df = pd.read_csv("cleaned_datasets/population.csv")
+    df_weird_countries = df[df['code'].isin(['HUN', 'ISL', 'LUX'])]
+    sns.lineplot(hue = "country", x ="year",y = "population",data = df_weird_countries, palette = "viridis")
+    plt.title("Population for Weird Countries from 2000 - 2019")
+    plt.legend(title='Country', bbox_to_anchor=(1, 1), loc='upper left')
+    plt.show()
 # RUNNING MAIN PROGRAM
 if __name__ == "__main__":
     run()
