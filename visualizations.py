@@ -15,13 +15,14 @@ def run():
     # hospital_stay_length_by_med_tech_avalibility_over_time()
     # analyze_weird_expenditure_correlations()
     #population()
-    population_werid()
+    population_neg_expenditure_corr()
 
 
 # =============================================
 # FUNCTION DEFINITIONS - no need to comment out
 # =============================================
 
+NEG_EXPENDITURE_CORR_CODES = []
 
 def med_tech_availability_corr_with_expenditure():
     df = pd.read_csv('cleaned_datasets/main_df.csv')
@@ -52,6 +53,8 @@ def analyze_weird_expenditure_correlations():
         lambda x: x['health_expenditure_as_percent_gdp'].corr(x['expenditure_per_capita'])
     ).reset_index(name='correlation')
     weird_countries = correlation_data[correlation_data['correlation'] < 0]['code'].to_list()
+    global NEG_EXPENDITURE_CORR_CODES
+    NEG_EXPENDITURE_CORR_CODES =  weird_countries
     df_subset = df[df['code'].isin(weird_countries)]
     
     plt.rc('figure', figsize=(15, 8))
@@ -129,9 +132,9 @@ def population():
     plt.legend(title='Country', bbox_to_anchor=(1, 1), loc='upper left')
     plt.show()
 
-def population_werid():
+def population_neg_expenditure_corr():
     df = pd.read_csv("cleaned_datasets/population.csv")
-    df_weird_countries = df[df['code'].isin(['HUN', 'ISL', 'LUX'])]
+    df_weird_countries = df[df['code'].isin(NEG_EXPENDITURE_CORR_CODES)]
     sns.lineplot(hue = "country", x ="year",y = "population",data = df_weird_countries, palette = "viridis")
     plt.title("Population for Weird Countries from 2000 - 2019")
     plt.legend(title='Country', bbox_to_anchor=(1, 1), loc='upper left')
