@@ -13,7 +13,7 @@ def run():
     # health_expenditure_p_capita_vs_health_expenditure_as_perc_gdp()
     # death_by_country_over_time()
     # hospital_stay_length_by_med_tech_avalibility_over_time()
-    # analyze_weird_expenditure_correlations()
+    # analyze_neg_expenditure_correlations()
     #population()
     population_neg_expenditure_corr()
 
@@ -47,7 +47,7 @@ def health_expenditure_p_capita_vs_health_expenditure_as_perc_gdp():
     sns.barplot(data=correlation_data, y='code', x='correlation', palette='viridis')
     plt.show()
 
-def analyze_weird_expenditure_correlations():
+def analyze_neg_expenditure_correlations():
     df = pd.read_csv('cleaned_datasets/main_df.csv')
     correlation_data = df.groupby('code').apply(
         lambda x: x['health_expenditure_as_percent_gdp'].corr(x['expenditure_per_capita'])
