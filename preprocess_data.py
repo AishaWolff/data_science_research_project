@@ -14,14 +14,14 @@ from tidy import tidy
 # ==================================================================================
 
 def run():
-    #medical_tech_availability()
-    #healthcare_expenditure_worldbank()
-    #life_expectancy_worldbank()
-    #ICU_beds()
-    #health_expenditure_as_percent_of_gdp()
-    #set_healthcare_capita_outcomes()
-    #avoidable_mortality()
-    # hospital_stay_length()
+    medical_tech_availability()
+    healthcare_expenditure_worldbank()
+    life_expectancy_worldbank()
+    ICU_beds()
+    health_expenditure_as_percent_of_gdp()
+    set_healthcare_capita_outcomes()
+    avoidable_mortality()
+    hospital_stay_length()
     oecd_population()
 
 # =============================================
