@@ -254,24 +254,24 @@ def gdp_worldbank():
     """
     gdp_by_country csv file retrieved from https://databank.worldbank.org/reports.aspx?source=2&series=NY.GDP.MKTP.CD&country#, setting the year to 2000-2019
     """
-    merged_df = pd.read_csv('cleaned_datasets/inner_merged.csv')
+    main_df = pd.read_csv('cleaned_datasets/main_df.csv')
     df = pd.read_csv('original_datasets/gdp_by_country.csv')
-    print(df, "\n\n\n")
     code_col = 'Country Code'
     # drop down to only have countries and columns that are in the final merged df
-    df = df[df[code_col].isin(merged_df['code'].unique())]
+    df = df[df[code_col].isin(main_df['code'].unique())]
     df = df.reset_index(drop=True)
     drop_cols = ['Series Name','Series Code']
     df = df.drop(columns=drop_cols)
     # get the year_col named like '2000' instead of '2000 [YR2000]'
-    year_columns = [col for col in df.columns if 'YR' in col]
-    year_rename_dict = {year_col: year_col[:4] for year_col in year_columns}
-    # rename cols in dict
-    rename_dict = {'Country Name': 'country', code_col:'code'} + year_rename_dict
+    old_year_columns = [col for col in df.columns if 'YR' in col]
+    new_year_columns = [year_col[:4] for year_col in old_year_columns]
+    rename_dict = dict(zip(old_year_columns, new_year_columns))
+    # rename cols in dict - combine year rename dict with other column rename dict
+    rename_dict.update({'Country Name': 'country', code_col:'code'})
     df = df.rename(columns=rename_dict)
-    df = pd.melt(df, id_vars=['country', 'code'], value_vars=year_columns, value_name='gdp_in_usd')
-    print(df)
-    # df_title = 'gdp_by_country'
+    df = pd.melt(df, id_vars=['country', 'code'], var_name='year',
+                  value_vars=new_year_columns, value_name='gdp_in_usd')
+    df.to_csv('cleaned_datasets/country_gdps.csv', index=False)
 
 
 
