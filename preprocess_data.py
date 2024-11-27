@@ -5,6 +5,8 @@ Here is where everyone will be writing code for their individual datasets.
 """
 
 import pandas as pd
+import country_converter as coco
+cc = coco.CountryConverter()
 from analysis import analyze
 from tidy import tidy
 
@@ -14,14 +16,15 @@ from tidy import tidy
 # ==================================================================================
 
 def run():
-    medical_tech_availability()
-    healthcare_expenditure_worldbank()
-    life_expectancy_worldbank()
-    ICU_beds()
-    health_expenditure_as_percent_of_gdp()
-    set_healthcare_capita_outcomes()
-    avoidable_mortality()
-    hospital_stay_length()
+    #medical_tech_availability()
+   #healthcare_expenditure_worldbank()
+    #life_expectancy_worldbank()
+    #ICU_beds()
+    #health_expenditure_as_percent_of_gdp()
+    #set_healthcare_capita_outcomes()
+    #avoidable_mortality()
+    #hospital_stay_length()
+    population()
 
 # =============================================
 # FUNCTION DEFINITIONS - no need to comment out
@@ -199,7 +202,23 @@ def hospital_stay_length():
     analyze(df, df_title)
     print(df)
 
+
+def population():
+    df = pd.read_csv("original_datasets/population.csv")
+    drop_cols = ["Name"]
+    df = df.drop(columns = drop_cols)
+    rename_dict = {"Year":"year","Population":"population","Annual Growth Rate":"annual_growth_rate","GENC":"code"}
+    df = df.rename(columns = rename_dict)
+    main_df = pd.read_csv("cleaned_datasets/main_df.csv")
+    some_countries = pd.Series(df["code"].unique())
+    iso3_codes = cc.pandas_convert(series=some_countries, to='ISO3')
+    good_countries = main_df['code'].unique()
+    df = df[df['code'].isin(good_countries)]
+    print(df)
+
+
 # RUNNING MAIN PROGRAM
 if __name__ == "__main__":
     # make sure to comment out the functions that you don't want to run inside the run() function
     run()
+   
