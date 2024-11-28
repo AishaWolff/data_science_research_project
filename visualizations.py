@@ -9,16 +9,17 @@ import matplotlib.pyplot as plt
 # ==================================================================================
 
 def run():
-    # med_tech_availability_corr_with_expenditure()
+    med_tech_availability_corr_with_expenditure()
     health_expenditure_p_capita_vs_health_expenditure_as_perc_gdp()
-    # death_by_country_over_time()
-    # hospital_stay_length_by_med_tech_avalibility_over_time()
+    death_by_country_over_time()
+    hospital_stay_length_by_med_tech_avalibility_over_time()
     analyze_neg_expenditure_correlations()
-    #population()
-    #population_neg_expenditure_corr()
+    population()
+    population_neg_expenditure_corr()
     gdp()    
     population_by_expenditure_per_capita()
     population_by_percent_gdp()
+    per_capita_med_tech_availability()
 
 
 # =============================================
@@ -56,7 +57,7 @@ def health_expenditure_p_capita_vs_health_expenditure_as_perc_gdp():
     ).reset_index(name='correlation')
 
     plt.figure(figsize=(10, 6))
-    plt.title("Correlation between Expenditure as percent of gdb and Expenditure per Capita by Country")
+    plt.title("Correlation between Expenditure as percent of gdp and Expenditure per Capita by Country")
     sns.barplot(data=correlation_data, y='code', x='correlation', palette='viridis')
     plt.show()
 
@@ -157,7 +158,17 @@ def per_capita_life_exp():
     plt.ylabel('Life Expectancy', fontsize=14)
     plt.legend(title='Country', bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.show()
-    
+
+def per_capita_med_tech_availability():
+    df = pd.read_csv("cleaned_datasets/main_df.csv")
+    sns.scatterplot(data=df, x='expenditure_per_capita', y='med_tech_availability_p_mil_ppl', hue='code', palette='tab10')
+    sns.regplot(data=df, x='expenditure_per_capita', y='life_expectancy', scatter=False, color='black')
+    plt.title('Healthcare Expenditure vs. Medical Technology Availability', fontsize=16)
+    plt.xlabel('Expenditure Per Capita', fontsize=14)
+    plt.ylabel('Medical Technology Availability per Million people', fontsize=14)
+    plt.legend(title='Country', bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.show()
+
 def population():
     df = pd.read_csv("cleaned_datasets/population.csv")
     sns.lineplot(hue = "country", x ="year",y = "population",data = df, palette = "viridis")
