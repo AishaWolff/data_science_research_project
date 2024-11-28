@@ -15,8 +15,11 @@ def run():
     # hospital_stay_length_by_med_tech_avalibility_over_time()
     analyze_neg_expenditure_correlations()
     #population()
-    population_neg_expenditure_corr()
-    gdp()
+    #population_neg_expenditure_corr()
+    gdp()    
+    population_by_expenditure_per_capita()
+    population_by_percent_gdp()
+
 
 # =============================================
 # FUNCTION DEFINITIONS - no need to comment out
@@ -171,13 +174,37 @@ def population_neg_expenditure_corr():
     plt.title("Population for Outlier Countries from 2000 - 2019")
     plt.legend(title='Country', bbox_to_anchor=(1, 1), loc='upper left')
     plt.show()
+
 #population by exepnditure correlation
 def population_by_expenditure_per_capita():
     df_pop = pd.read_csv("cleaned_datasets/population.csv")
     df_main = pd.read_csv("cleaned_datasets/main_df.csv")
+    merged_df = df_main.merge(df_pop, on = ['code','year'],how = 'inner')
+
+    correlation_data = merged_df.groupby('code').apply(
+        lambda x: x['population'].corr(x['expenditure_per_capita'])
+    ).reset_index(name='correlation')
+
+    plt.figure(figsize=(10, 6))
+    plt.title("Correlation between Expenditure Per Capita and Population")
+    sns.barplot(data=correlation_data, y='code', x='correlation', palette='viridis')
+    plt.show()
+
 
 #population by gdp correlation
 def population_by_percent_gdp():
+    df_pop = pd.read_csv("cleaned_datasets/population.csv")
+    df_main = pd.read_csv("cleaned_datasets/main_df.csv")
+    merged_df = df_main.merge(df_pop, on = ['code','year'],how = 'inner')
+
+    correlation_data = merged_df.groupby('code').apply(
+        lambda x: x['population'].corr(x['health_expenditure_as_percent_gdp'])
+    ).reset_index(name='correlation')
+
+    plt.figure(figsize=(10, 6))
+    plt.title("Correlation between Expenditure as a Percentage of GDP and Population")
+    sns.barplot(data=correlation_data, y='code', x='correlation', palette='viridis')
+    plt.show()
 
 
 
