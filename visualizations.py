@@ -169,18 +169,19 @@ def per_capita_med_tech_availability():
     plt.legend(title='Country', bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.show()
 
+#population of all countries for each year
 def population():
     df = pd.read_csv("cleaned_datasets/population.csv")
-    sns.lineplot(hue = "country", x ="year",y = "population",data = df, palette = "viridis")
+    sns.lineplot(hue = "country", x ="year",y = "population",data = df, palette = "tab10")
     plt.title("Population by country from 2000 - 2019")
     plt.legend(title='Country', bbox_to_anchor=(1, 1), loc='upper left')
     plt.show()
-
+#closer look at populations with negative expenditure correlation for another analysis
 def population_neg_expenditure_corr():
     df = pd.read_csv("cleaned_datasets/population.csv")
     outlier_countries = get_neg_expenditure_corr_codes()
     df_outlier_countries = df[df['code'].isin(outlier_countries)]
-    sns.lineplot(hue = "country", x ="year",y = "population",data = df_outlier_countries, palette = "viridis")
+    sns.lineplot(hue = "country", x ="year",y = "population",data = df_outlier_countries, palette = "tab10")
     plt.title("Population for Outlier Countries from 2000 - 2019")
     plt.legend(title='Country', bbox_to_anchor=(1, 1), loc='upper left')
     plt.show()
@@ -197,7 +198,7 @@ def population_by_expenditure_per_capita():
 
     plt.figure(figsize=(10, 6))
     plt.title("Correlation between Expenditure Per Capita and Population")
-    sns.barplot(data=correlation_data, y='code', x='correlation', palette='viridis')
+    sns.barplot(data=correlation_data, y='code', x='correlation', palette='tab10')
     plt.show()
 
 
@@ -213,7 +214,7 @@ def population_by_percent_gdp():
 
     plt.figure(figsize=(10, 6))
     plt.title("Correlation between Expenditure as a Percentage of GDP and Population")
-    sns.barplot(data=correlation_data, y='code', x='correlation', palette='viridis')
+    sns.barplot(data=correlation_data, y='code', x='correlation', palette='tab10')
     plt.show()
 
 
