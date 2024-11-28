@@ -24,7 +24,6 @@ def run():
     hospital_stay_length()
     oecd_population()
     gdp_worldbank()
-    # population()
 
 # =============================================
 # FUNCTION DEFINITIONS - no need to comment out
@@ -226,72 +225,10 @@ def gdp_worldbank():
                   value_vars=new_year_columns, value_name='gdp_in_usd')
     df.to_csv('cleaned_datasets/country_gdps.csv', index=False)
 
-
-
-def population():
-    df = pd.read_csv("original_datasets/population.csv")
-    rename_dict = {"Year":"year","Population":"population","Annual Growth Rate":"annual_growth_rate","GENC":"code"}
-    df = df.rename(columns = rename_dict)
-    main_df = pd.read_csv("cleaned_datasets/main_df.csv")
-    some_countries = df["Name"].unique()
-    some_countries = pd.Series(some_countries)
-    oecd_since_1995 = cc.data[(cc.data.OECD >= 1995) & cc.data.name_short.isin(some_countries)].name_short
-    print(oecd_since_1995)
-    #iso3_codes = cc.pandas_convert(series=some_countries, to='ISO3')
-    #print(iso3_codes)
-    #print('this is the length')
-    #print(len(iso3_codes == "not found"))
-    good_countries = main_df['code'].unique()
-    df = df[df['code'].isin(good_countries)]
-    drop_cols = ["Name"]
-    #df = df.drop(columns = drop_cols)
-
 def oecd_population():
     df = pd.read_csv("original_datasets/oecd_population_data.csv")
     rename_cols = {"Code":"code","Population - Sex: all - Age: all - Variant: estimates":"population","Entity":"country","Year":"year"}
     df = df.rename(columns= rename_cols)
-def gdp_worldbank():
-    """
-    gdp_by_country csv file retrieved from https://databank.worldbank.org/reports.aspx?source=2&series=NY.GDP.MKTP.CD&country#, setting the year to 2000-2019
-    """
-    main_df = pd.read_csv('cleaned_datasets/main_df.csv')
-    df = pd.read_csv('original_datasets/gdp_by_country.csv')
-    code_col = 'Country Code'
-    # drop down to only have countries and columns that are in the final merged df
-    df = df[df[code_col].isin(main_df['code'].unique())]
-    df = df.reset_index(drop=True)
-    drop_cols = ['Series Name','Series Code']
-    df = df.drop(columns=drop_cols)
-    # get the year_col named like '2000' instead of '2000 [YR2000]'
-    old_year_columns = [col for col in df.columns if 'YR' in col]
-    new_year_columns = [year_col[:4] for year_col in old_year_columns]
-    rename_dict = dict(zip(old_year_columns, new_year_columns))
-    # rename cols in dict - combine year rename dict with other column rename dict
-    rename_dict.update({'Country Name': 'country', code_col:'code'})
-    df = df.rename(columns=rename_dict)
-    df = pd.melt(df, id_vars=['country', 'code'], var_name='year',
-                  value_vars=new_year_columns, value_name='gdp_in_usd')
-    df.to_csv('cleaned_datasets/country_gdps.csv', index=False)
-
-
-
-def population():
-    df = pd.read_csv("original_datasets/population.csv")
-    rename_dict = {"Year":"year","Population":"population","Annual Growth Rate":"annual_growth_rate","GENC":"code"}
-    df = df.rename(columns = rename_dict)
-    main_df = pd.read_csv("cleaned_datasets/main_df.csv")
-    some_countries = df["Name"].unique()
-    some_countries = pd.Series(some_countries)
-    oecd_since_1995 = cc.data[(cc.data.OECD >= 1995) & cc.data.name_short.isin(some_countries)].name_short
-    print(oecd_since_1995)
-    #iso3_codes = cc.pandas_convert(series=some_countries, to='ISO3')
-    #print(iso3_codes)
-    #print('this is the length')
-    #print(len(iso3_codes == "not found"))
-    good_countries = main_df['code'].unique()
-    df = df[df['code'].isin(good_countries)]
-    drop_cols = ["Name"]
-    #df = df.drop(columns = drop_cols)
     print(df)
     unique_countires =len(df["code"].unique())
     print(unique_countires)
