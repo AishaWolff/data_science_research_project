@@ -165,11 +165,7 @@ def population():
     plt.legend(title='Country', bbox_to_anchor=(1, 1), loc='upper left')
     plt.show()
 
-<<<<<<< HEAD
 def population_neg_expenditure_corr():
-=======
-def population_werid():
->>>>>>> 2e676f7 (Revert "adding visualizationg for population correlations")
     df = pd.read_csv("cleaned_datasets/population.csv")
     outlier_countries = get_neg_expenditure_corr_codes()
     df_outlier_countries = df[df['code'].isin(outlier_countries)]
