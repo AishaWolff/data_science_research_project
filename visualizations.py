@@ -14,7 +14,6 @@ def run():
     # death_by_country_over_time()
     # hospital_stay_length_by_med_tech_avalibility_over_time()
     analyze_neg_expenditure_correlations()
-    gdp()
     #population()
     population_neg_expenditure_corr()
     gdp()
@@ -74,17 +73,24 @@ def analyze_neg_expenditure_correlations():
     ax2.set_title('Health Expenditure per Capita Over Time')
     plt.show()
 
-def gdp():
+def gdp(only_outlier_countries=True):
     df = pd.read_csv('cleaned_datasets/country_gdps.csv')
-    print()
-    df_weird_countries = df[df['code'].isin(['HUN', 'ISL', 'LUX'])]
-    # look at gdp for all countries
-    max_gdp = df['gdp_in_usd'].max()
-    country_w_highest_gdp = df[df['gdp_in_usd'] == max_gdp]['code'].iloc[0]
-    print("Country with highest GDP:", country_w_highest_gdp)
-    df_except_highest = df[df['code'] != country_w_highest_gdp]
-    sns.lineplot(x='year', y='gdp_in_usd', hue='country', data=df_weird_countries, palette='viridis')
-    plt.title = ""
+    data_df = None
+    # only look at the gdp of outlier countries
+    if only_outlier_countries:
+        outlier_countries = get_neg_expenditure_corr_codes()
+        df_weird_countries = df[df['code'].isin(outlier_countries)]
+        plt.title("GDP of outlier countries in USD")
+        data_df = df_weird_countries
+    else:
+        # look at gdp for all countries
+        max_gdp = df['gdp_in_usd'].max()
+        country_w_highest_gdp = df[df['gdp_in_usd'] == max_gdp]['code'].iloc[0]
+        print("Country with highest GDP:", country_w_highest_gdp)
+        df_except_highest = df[df['code'] != country_w_highest_gdp]
+        data_df = df_except_highest
+
+    sns.lineplot(x='year', y='gdp_in_usd', hue='country', data=data_df, palette='viridis')
     plt.show()
 
 #avoidable deaths by country per year
