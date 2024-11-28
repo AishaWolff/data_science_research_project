@@ -198,7 +198,7 @@ def population_by_expenditure_per_capita():
 
     plt.figure(figsize=(10, 6))
     plt.title("Correlation between Expenditure Per Capita and Population")
-    sns.barplot(data=correlation_data, y='code', x='correlation', palette='tab10')
+    sns.barplot(data=correlation_data, y='code', x='correlation', palette='viridis')
     plt.show()
 
 
@@ -214,7 +214,7 @@ def population_by_percent_gdp():
 
     plt.figure(figsize=(10, 6))
     plt.title("Correlation between Expenditure as a Percentage of GDP and Population")
-    sns.barplot(data=correlation_data, y='code', x='correlation', palette='tab10')
+    sns.barplot(data=correlation_data, y='code', x='correlation', palette='viridis')
     plt.show()
 
 
