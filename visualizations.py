@@ -154,7 +154,8 @@ def per_capita_life_exp():
     plt.ylabel('Life Expectancy', fontsize=14)
     plt.legend(title='Country', bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.show()
-    
+
+#overall population by year
 def population():
     df = pd.read_csv("cleaned_datasets/population.csv")
     sns.lineplot(hue = "country", x ="year",y = "population",data = df, palette = "viridis")
@@ -170,6 +171,16 @@ def population_neg_expenditure_corr():
     plt.title("Population for Outlier Countries from 2000 - 2019")
     plt.legend(title='Country', bbox_to_anchor=(1, 1), loc='upper left')
     plt.show()
+#population by exepnditure correlation
+def population_by_expenditure_per_capita():
+    df_pop = pd.read_csv("cleaned_datasets/population.csv")
+    df_main = pd.read_csv("cleaned_datasets/main_df.csv")
+
+#population by gdp correlation
+def population_by_percent_gdp():
+
+
+
 # RUNNING MAIN PROGRAM
 if __name__ == "__main__":
     run()
