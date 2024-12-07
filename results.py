@@ -60,12 +60,6 @@ print(results_df)
 
 
 
-
-
-
-
-
-
 #expenditure rankings 
 #draw corellation between quality ranking and gdp ranking, and capita ranking seperately 
 gdp_exp, mean_gdp_exp, sd_gdp_exp = rank_column("health_expenditure_as_percent_gdp",False)
