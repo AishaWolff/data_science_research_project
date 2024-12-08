@@ -7,7 +7,6 @@ df = pd.read_csv("cleaned_datasets/main_df.csv")
 
 new = df.groupby('code').mean()
 new = new.drop(columns = ['year'])
-#print (new)
 
 #ranks by a column
 def rank_column(column,ascending):
@@ -21,11 +20,8 @@ def rank_column(column,ascending):
 
 #quality of care rankings 
 hos_stay, mean_hos_stay, sd_hos_stay = rank_column('hospital_stay_length',True)
-
 med_ava, mean_med_ava, sd_med_ava = rank_column("med_tech_availability_p_mil_ppl",False)
-
 life_exp, mean_life_exp, sd_ife_exp = rank_column('life_expectancy',False)
-
 nono_death, mean_nono_death, sd_nono_death = rank_column("avoidable_deaths",True)
 
 #weighted average 
@@ -49,19 +45,42 @@ def weight_averages():
 
     return rank_df
         
-
-
+#results datafram organization
 rank_df = weight_averages()
 results_df = rank_df.sort_values("rank_weighted_sum",ascending = True)
 results_df = results_df[["code","rank_weighted_sum"]]
 results_df = results_df.reset_index(drop = True)
+results_df["rank"] = results_df.index + 1
+results_df = results_df[["rank", "code", "rank_weighted_sum"]]
 
 print(results_df)
-
-
 
 #expenditure rankings 
 #draw corellation between quality ranking and gdp ranking, and capita ranking seperately 
 gdp_exp, mean_gdp_exp, sd_gdp_exp = rank_column("health_expenditure_as_percent_gdp",False)
+print(gdp_exp)
 
 capita_exp, mean_capita_exp, sd_capita_exp = rank_column('expenditure_per_capita',False)
+
+#correlation of rankings visulizations 
+def results_capita_exepnditure_corr():
+    merged_df = pd.merge(results_df, gdp_exp, on = ['code'], suffixes = ["_final","_health_expenditure"])
+    print(merged_df)
+    #merged_df["correlation"] = merged_df['rank_final'].corr(merged_df['health_expenditure_as_percent_gdp'])
+    plt.figure(figsize=(10, 6))
+    plt.title("Correlation between Expenditure as a Percentage of GDP and HealthCare Quality")
+    sns.scatterplot(data= merged_df, y='rank_final', x='rank_health_expenditure', palette='viridis')
+    plt.show()
+
+results_capita_exepnditure_corr()
+
+def results_capita_exepnditure_corr():
+    merged_df = pd.merge(results_df, capita_exp, on = ['code'], suffixes = ["_final","_health_expenditure"])
+    print(merged_df)
+    #merged_df["correlation"] = merged_df['rank_final'].corr(merged_df['health_expenditure_as_percent_gdp'])
+    plt.figure(figsize=(10, 6))
+    plt.title("Correlation between Expenditure Per Capita and HealthCare Quality")
+    sns.scatterplot(data= merged_df, y='rank_final', x='rank_health_expenditure', palette='viridis')
+    plt.show()
+
+results_capita_exepnditure_corr()
