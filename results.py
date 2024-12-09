@@ -33,16 +33,18 @@ quality_of_care_info = {
 #weighted average 
 def weight_averages(multipliers_dict):
     columns = ['code','rank']
-    df_1 = [hos_stay[columns], med_ava[columns]]
-    df_2 = [life_exp[columns],avoidable_death[columns]]
-    rank_df_1 = pd.merge(df_1[0],df_1[1], on = "code", suffixes = ['_hospital_stay_length','_med_tech_availability_p_mil_ppl'])
-    rank_df_2 = pd.merge(df_2[0],df_2[1], on = "code", suffixes = ['_life_expectancy','_avoidable_deaths'])
+    # get dataframes ready to be merged, only including the code and rank columns
+    df_pair_1 = [hos_stay[columns], med_ava[columns]]
+    df_pair_2 = [life_exp[columns],avoidable_death[columns]]
+    # merge all 4 dataframes into one, with columns such as "rank_hospital_stay_length"
+    rank_df_1 = pd.merge(df_pair_1[0],df_pair_1[1], on = "code", suffixes = ['_hospital_stay_length','_med_tech_availability_p_mil_ppl'])
+    rank_df_2 = pd.merge(df_pair_2[0],df_pair_2[1], on = "code", suffixes = ['_life_expectancy','_avoidable_deaths'])
     rank_df = pd.merge(rank_df_1,rank_df_2, on = "code")
-
-    rank_df['rank_weighted_sum'] = 0
+    # calculated the weighted average based on the passed in normalized multipliers dict
+    rank_df['rank_weighted_avg'] = 0
     for column,multiplier in multipliers_dict.items():
         temp = rank_df[column] * multiplier
-        rank_df["rank_weighted_sum"] = rank_df["rank_weighted_sum"] + temp
+        rank_df["rank_weighted_avg"] = rank_df["rank_weighted_avg"] + temp
 
     return rank_df
         
@@ -70,11 +72,14 @@ weighted_multipliers = weight_by_sd_as_perc_mean(quality_of_care_info)
 
 #results dataframe organization
 def calculate_results(multipliers):
+    """Given a dictionary of column names and multipliers, calculate the weighted average.
+    Return a dataframe containing the final rank, code, and the weighted average of all ranked variables.
+    """
     rank_df = weight_averages(multipliers)
-    results_df = rank_df.sort_values("rank_weighted_sum",ascending = True)
+    results_df = rank_df.sort_values("rank_weighted_avg",ascending = True)
     results_df = results_df.reset_index(drop = True)
     results_df["rank"] = results_df.index + 1
-    results_df = results_df[["rank", "code", "rank_weighted_sum"]]
+    results_df = results_df[["rank", "code", "rank_weighted_avg"]]
     return results_df
 
 # calculate results based on the different multipliers
