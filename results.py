@@ -45,7 +45,7 @@ def weight_averages():
 
     return rank_df
         
-#results datafram organization
+#results dataframe organization
 rank_df = weight_averages()
 results_df = rank_df.sort_values("rank_weighted_sum",ascending = True)
 results_df = results_df[["code","rank_weighted_sum"]]
